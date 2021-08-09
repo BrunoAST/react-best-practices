@@ -1,6 +1,6 @@
 import {HttpPostClientSpy} from '../../test/mock-http-client';
 import {RemoteAuthentication} from './remote-authentication';
-import {mockAuthentication} from "../../../domain/test/mock-authentication";
+import {mockAccountModel, mockAuthentication} from "../../../domain/test/mock-account";
 import {InvalidCredentialsError} from "../../../domain/errors/invalid-credentials-error";
 import {HttpStatusCode} from "../../protocols/http/http-response";
 import {UnexpectedError} from "../../../domain/errors/unexpected-error";
@@ -23,14 +23,14 @@ const makeSut = (url: string = faker.internet.url()): SutTypes => {
 }
 
 describe(`RemoteAuthentication`, () => {
-    it(`Should call httpClient with correct URL`, async () => {
+    it(`Should call HttpClientPostClient with correct URL`, async () => {
         const url = faker.internet.url();
         const {sut, httpPostClientSpy} = makeSut(url);
         await sut.auth(mockAuthentication());
         expect(httpPostClientSpy.url).toBe(url);
     });
 
-    it(`Should call httpClient with correct body`, async () => {
+    it(`Should call HttpClientPostClient with correct body`, async () => {
         const {sut, httpPostClientSpy} = makeSut();
         const authenticationParams = mockAuthentication();
         await sut.auth(authenticationParams);
@@ -71,5 +71,16 @@ describe(`RemoteAuthentication`, () => {
         };
         const promise = sut.auth(mockAuthentication());
         await expect(promise).rejects.toThrow(new UnexpectedError());
+    });
+
+    it(`Should return an AccountModel if HttpClientPostClient return 200`, async () => {
+        const {sut, httpPostClientSpy} = makeSut();
+        const httpResult = mockAccountModel();
+        httpPostClientSpy.response = {
+            statusCode: HttpStatusCode.ok,
+            body: httpResult
+        };
+        const account = await sut.auth(mockAuthentication());
+        await expect(account).toEqual(httpResult);
     });
 });
