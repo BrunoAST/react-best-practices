@@ -1,10 +1,21 @@
 {
-    "extends": "airbnb-typescript",
+    "settings": {
+        "react": {
+            "version": "detect"
+        }
+    },
+    "extends": [
+        "airbnb-typescript",
+        "plugin:react/recommended"
+    ],
+    "plugins": ["react"],
     "parserOptions": {
         "project": "./tsconfig.json"
     },
     "rules": {
         "@typescript-eslint/consistent-type-definitions": "off",
-        "@typescript-eslint/strict-boolean-expressions": "off"
+        "@typescript-eslint/strict-boolean-expressions": "off",
+        "react/jsx-use-react": "error",
+        "react/jsx-use-vars": "error"
     }
 }
