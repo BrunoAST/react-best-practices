@@ -1,41 +1,34 @@
 import {AxiosHttpClient} from "./axios-http-client";
-import {HttpPostParams} from "../../../data/protocols/http/http-post-client";
+import {mockAxios} from "../test/mock-axios";
+import {mockPostRequest} from "../../../data/test/mock-http-post";
 import axios from "axios";
-import faker from "faker";
 
 jest.mock("axios");
-const mockedAxios = axios as jest.Mocked<typeof axios>;
 
-const mockedAxiosResult = {
-    data: faker.random.objectElement(),
-    status: faker.datatype.number(),
-}
-mockedAxios.post.mockResolvedValue(mockedAxiosResult);
-
-const makeSut = (): AxiosHttpClient => {
-    return new AxiosHttpClient();
+type SutTypes = {
+    sut: AxiosHttpClient,
+    mockedAxios: jest.Mocked<typeof axios>,
 }
 
-const mockPostRequest = (): HttpPostParams<unknown> => ({
-    url: faker.internet.url(),
-    body: faker.random.objectElement()
-});
+const makeSut = (): SutTypes => {
+    const sut = new AxiosHttpClient();
+    const mockedAxios = mockAxios();
+    return {sut, mockedAxios};
+}
 
 describe("AxiosHttpClient", () => {
     it("Should call axios with correct URL and verb", async () => {
         const request = mockPostRequest();
-        const sut = makeSut();
+        const {sut, mockedAxios} = makeSut();
         await sut.post(request);
         expect(mockedAxios.post).toHaveBeenCalledWith(request.url, request.body);
     });
 
-    it("Should return the correct statusCode and body", async () => {
-        const request = mockPostRequest();
-        const sut = makeSut();
-        const response = await sut.post(request);
-        expect(response).toEqual({
-            statusCode: mockedAxiosResult.status,
-            body: mockedAxiosResult.data
-        });
+    it("Should return the correct statusCode and body", () => {
+        const {sut, mockedAxios} = makeSut();
+        const promise = sut.post(mockPostRequest());
+        // mock: has the result of mockResolvedValue
+        // position 0: mock has 2 values: resolved and reject
+        expect(promise).toEqual(mockedAxios.post.mock.results[0].value);
     });
 });
