@@ -14,7 +14,33 @@ module.exports = {
     //Which type of extension that can be accepted for build and local server listener
     resolve: {
         extensions: [
-            ".ts", ".tsx", ".js"
+            ".ts", ".tsx", ".js", ".scss"
+        ]
+    },
+    module: {
+        rules: [
+            {
+                test: /\.ts(x?)$/,
+                loader: "ts-loader",
+                exclude: /node_modules/
+            },
+            {
+                test: /\.scss$/,
+                use: [
+                    {
+                        loader: "style-loader"
+                    },
+                    {
+                        loader: "css-loader",
+                        options: {
+                            modules: true
+                        }
+                    },
+                    {
+                        loader: "sass-loader"
+                    }
+                ]
+            }
         ]
     },
     devServer: {
