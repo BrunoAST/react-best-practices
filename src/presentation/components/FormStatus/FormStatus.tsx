@@ -1,5 +1,5 @@
 import React from "react";
-import Styles from "./form-status-styles.scss";
+import Styles from "./form-status.module.scss";
 import Spinner from "../Spinner/Spinner";
 
 const FormStatus: React.FC = () => {

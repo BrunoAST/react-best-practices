@@ -1,5 +1,5 @@
 import React, {memo} from "react";
-import Styles from "./footer-styles.scss";
+import Styles from "./footer.module.scss";
 
 const Footer: React.FC = () => {
     return (

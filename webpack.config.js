@@ -14,7 +14,7 @@ module.exports = {
     //Which type of extension that can be accepted for build and local server listener
     resolve: {
         extensions: [
-            ".ts", ".tsx", ".js", ".scss"
+            ".ts", ".tsx", ".js", ".css", ".scss"
         ],
         alias: {
             '@': path.join(__dirname, 'src')
@@ -30,18 +30,10 @@ module.exports = {
             {
                 test: /\.scss$/,
                 use: [
-                    {
-                        loader: "style-loader"
-                    },
-                    {
-                        loader: "css-loader",
-                        options: {
-                            modules: true
-                        }
-                    },
-                    {
-                        loader: "sass-loader"
-                    }
+                    {loader: "style-loader"},
+                    {loader: "css-modules-typescript-loader"},
+                    {loader: "css-loader", options: {modules: true}},
+                    {loader: "sass-loader"},
                 ]
             }
         ]

@@ -1,5 +1,5 @@
 import React from "react";
-import Styles from "./login-styles.scss";
+import Styles from "./login.module.scss";
 import LoginHeader from "../../components/LoginHeader/LoginHeader";
 import Footer from "../../components/Footer/Footer";
 import Input from "../../components/Input/Input";
