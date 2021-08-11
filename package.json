@@ -13,6 +13,7 @@
     "test:ci": "npm test -- --coverage"
   },
   "devDependencies": {
+    "@testing-library/react": "^12.0.0",
     "@types/jest": "^26.0.23",
     "@types/react-router-dom": "^5.1.8",
     "@typescript-eslint/eslint-plugin": "^4.27.0",
@@ -35,8 +36,8 @@
     "node-sass": "^4.14.1",
     "sass-loader": "^10.0.2",
     "style-loader": "^1.2.1",
-    "ts-jest": "^27.0.3",
-    "ts-loader": "^8.0.4",
+    "ts-jest": "^27.0.4",
+    "ts-loader": "^9.2.5",
     "typescript": "^4.3.2",
     "webpack": "^4.44.2",
     "webpack-cli": "^3.3.12",

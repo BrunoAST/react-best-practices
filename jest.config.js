@@ -2,12 +2,15 @@ module.exports = {
     roots: ['<rootDir>/src'],
     collectCoverageFrom: [
         "<rootDir>/src/**/*.{ts,tsx}",
-        "!**/*.d.ts"
+        "!**/*.d.ts",
+        "!**/*.scss.d.ts"
     ],
     coverageDirectory: "coverage",
+    moduleNameMapper: {
+        '^.+\\.(scss)$': '<rootDir>/config/style-mock.js'
+    },
     testEnvironment: "jsdom",
     transform: {
-        ".+\\.(ts|tsx)$": "ts-jest",
-        "\\.scss$": "identity-obj-proxy"
+        ".+\\.(ts|tsx)$": "ts-jest"
     }
 }
