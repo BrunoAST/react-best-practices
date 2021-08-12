@@ -15,7 +15,7 @@ const Login: React.FC = () => {
     const [state] = useState<StateProps>({isLoading: false, errorMessage: ""});
 
     return (
-        <div data-testid="" className={Styles.login}>
+        <div className={Styles.login}>
             <LoginHeader/>
             <Context.Provider value={state}>
                 <form className={Styles.login__form}>
@@ -24,7 +24,14 @@ const Login: React.FC = () => {
                     <Input type="email" name="email" placeholder="Digite seu e-mail"/>
                     <Input type="password" name="password" placeholder="Digite sua senha"/>
 
-                    <button className={Styles.submit} type="submit">Entrar</button>
+                    <button
+                        className={Styles.submit}
+                        type="submit"
+                        data-testid="submit-button"
+                        disabled
+                    >
+                        Entrar
+                    </button>
                     <span className={Styles.link}>Criar conta</span>
 
                     <FormStatus/>
