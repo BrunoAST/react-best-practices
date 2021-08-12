@@ -6,23 +6,34 @@ import Input from "../../components/Input/Input";
 import FormStatus from "../../components/FormStatus/FormStatus";
 import Context from "../../context/form/form-context";
 
-type StateProps = {
-    isLoading: boolean;
-    errorMessage: string;
-}
-
 const Login: React.FC = () => {
-    const [state] = useState<StateProps>({isLoading: false, errorMessage: ""});
+    const [state] = useState({
+        isLoading: false,
+    });
+
+    const [errorState] = useState({
+        email: "Campo obrigatório",
+        password: "Campo obrigatório",
+        mainError: "",
+    });
 
     return (
         <div className={Styles.login}>
             <LoginHeader/>
-            <Context.Provider value={state}>
+            <Context.Provider value={{state, errorState}}>
                 <form className={Styles.login__form}>
                     <h2>Login</h2>
 
-                    <Input type="email" name="email" placeholder="Digite seu e-mail"/>
-                    <Input type="password" name="password" placeholder="Digite sua senha"/>
+                    <Input
+                        type="email"
+                        name="email"
+                        placeholder="Digite seu e-mail"
+                    />
+                    <Input
+                        type="password"
+                        name="password"
+                        placeholder="Digite sua senha"
+                    />
 
                     <button
                         className={Styles.submit}
