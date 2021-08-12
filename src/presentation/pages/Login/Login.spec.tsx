@@ -1,15 +1,33 @@
 import React from "react";
-import {render, RenderResult} from "@testing-library/react";
+import {cleanup, fireEvent, render, RenderResult} from "@testing-library/react";
+import faker from "faker";
 import Login from "./Login";
+import {Validation} from "../../protocols/validation";
 
 type SutTypes = {
     sut: RenderResult;
+    validationSpy: ValidationSpy;
+}
+
+class ValidationSpy implements Validation {
+    errorMessage: string;
+    input: object;
+
+    validate(input: object): string {
+        this.input = input;
+        return this.errorMessage;
+    }
 }
 
 const makeSut = (): SutTypes => {
-    const sut = render(<Login/>);
-    return {sut};
+    const validationSpy = new ValidationSpy();
+    const sut = render(<Login validation={validationSpy}/>);
+    return {sut, validationSpy};
 }
+
+afterEach(() => {
+    cleanup();
+});
 
 describe("Login Component", () => {
     it("Should not render spinner and error on start", () => {
@@ -32,5 +50,25 @@ describe("Login Component", () => {
         const passwordStatus = makeSut().sut.getByTestId("password-status");
         expect(passwordStatus.title).toBe("Campo obrigatório");
         expect(passwordStatus.textContent).toBe("🔴");
+    });
+
+    it("Should call email validation with correct value", () => {
+        const fakeEmail = faker.internet.email();
+        const {sut, validationSpy} = makeSut();
+        const emailInput = sut.getByTestId("email");
+        fireEvent.input(emailInput, {target: {value: fakeEmail}});
+        expect(validationSpy.input).toEqual({
+            email: fakeEmail
+        });
+    });
+
+    it("Should call password validation with correct value", () => {
+        const fakePassword = faker.internet.password();
+        const {sut, validationSpy} = makeSut();
+        const passwordInput = sut.getByTestId("password");
+        fireEvent.input(passwordInput, {target: {value: fakePassword}});
+        expect(validationSpy.input).toEqual({
+            password: fakePassword
+        });
     });
 });
