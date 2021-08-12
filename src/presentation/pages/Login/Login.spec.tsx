@@ -16,4 +16,16 @@ describe("Login Component", () => {
         const submitButton = screen.getByTestId("submit-button") as HTMLButtonElement;
         expect(submitButton.disabled).toBeTruthy();
     });
+
+    it("Should start with the initial status label for email input", () => {
+        const emailStatus = screen.getByTestId("email-status");
+        expect(emailStatus.title).toBe("Campo obrigatório");
+        expect(emailStatus.textContent).toBe("🔴");
+    });
+
+    it("Should start with the initial status label for password input", () => {
+        const passwordStatus = screen.getByTestId("password-status");
+        expect(passwordStatus.title).toBe("Campo obrigatório");
+        expect(passwordStatus.textContent).toBe("🔴");
+    });
 });
