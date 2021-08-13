@@ -8,7 +8,7 @@ import Context from "../../context/form/form-context";
 import {Validation} from "../../protocols/validation";
 import {Authentication} from "../../../domain/usecases/authentication";
 import {Simulate} from "react-dom/test-utils";
-import error = Simulate.error;
+
 
 type Props = {
     validation: Validation;
@@ -38,7 +38,10 @@ const Login: React.FC<Props> = ({validation, authentication}: Props) => {
         if (state.isLoading || state.emailError || state.passwordError) return;
         setState({...state, isLoading: true});
         authentication.auth({email: state.email, password: state.password})
-            .then()
+            .then((account) => {
+                    localStorage.setItem("accessToken", account.accessToken);
+                }
+            )
             .catch(error => {
                 setState({...state, isLoading: false, mainError: error.message});
             });
