@@ -6,12 +6,14 @@ import Input from "../../components/Input/Input";
 import FormStatus from "../../components/FormStatus/FormStatus";
 import Context from "../../context/form/form-context";
 import {Validation} from "../../protocols/validation";
+import {Authentication} from "../../../domain/usecases/authentication";
 
 type Props = {
     validation: Validation;
+    authentication: Authentication;
 }
 
-const Login: React.FC<Props> = ({validation}: Props) => {
+const Login: React.FC<Props> = ({validation, authentication}: Props) => {
     const [state, setState] = useState({
         isLoading: false,
         email: "",
@@ -29,12 +31,10 @@ const Login: React.FC<Props> = ({validation}: Props) => {
         });
     }, [state.email, state.password]);
 
-    const handleSubmit = (event: React.FormEvent<HTMLFormElement>): void => {
+    const handleSubmit = async (event: React.FormEvent<HTMLFormElement>): Promise<void> => {
         event.preventDefault();
-        setState({
-            ...state,
-            isLoading: true
-        });
+        setState({...state, isLoading: true});
+        await authentication.auth({email: state.email, password: state.password});
     }
 
     return (
