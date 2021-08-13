@@ -6,14 +6,17 @@ import {ValidationStub} from "../../test/mock-validation";
 
 type SutTypes = {
     sut: RenderResult;
-    validationStub: ValidationStub;
 }
 
-const makeSut = (): SutTypes => {
-    const validationSpy = new ValidationStub();
-    validationSpy.errorMessage = faker.random.words();
-    const sut = render(<Login validation={validationSpy}/>);
-    return {sut, validationStub: validationSpy};
+type SutParams = {
+    validationError: string;
+}
+
+const makeSut = (params?: SutParams): SutTypes => {
+    const validationStub = new ValidationStub();
+    validationStub.errorMessage = params?.validationError;
+    const sut = render(<Login validation={validationStub}/>);
+    return {sut};
 }
 
 afterEach(() => {
@@ -27,21 +30,25 @@ describe("Login Component", () => {
     });
 
     it("Should start with submit button disabled", () => {
-        const submitButton = makeSut().sut.getByTestId("submit-button") as HTMLButtonElement;
+        const validationError = faker.random.words();
+        const {sut} = makeSut({validationError});
+        const submitButton = sut.getByTestId("submit-button") as HTMLButtonElement;
         expect(submitButton.disabled).toBeTruthy();
     });
 
     it("Should start with the initial status label for email input", () => {
-        const {sut, validationStub} = makeSut();
+        const validationError = faker.random.words();
+        const {sut} = makeSut({validationError});
         const emailStatus = sut.getByTestId("email-status");
-        expect(emailStatus.title).toBe(validationStub.errorMessage);
+        expect(emailStatus.title).toBe(validationError);
         expect(emailStatus.textContent).toBe("🔴");
     });
 
     it("Should start with the initial status label for password input", () => {
-        const {sut, validationStub} = makeSut();
+        const validationError = faker.random.words();
+        const {sut} = makeSut({validationError});
         const passwordStatus = sut.getByTestId("password-status");
-        expect(passwordStatus.title).toBe(validationStub.errorMessage);
+        expect(passwordStatus.title).toBe(validationError);
         expect(passwordStatus.textContent).toBe("🔴");
     });
 
@@ -49,6 +56,7 @@ describe("Login Component", () => {
         const {sut, validationStub} = makeSut();
         const emailInput = sut.getByTestId("email");
         const emailStatus = sut.getByTestId("email-status");
+        validationStub.errorMessage = faker.random.words();
         fireEvent.input(emailInput, {target: {value: faker.internet.email()}});
         expect(emailStatus.title).toBe(validationStub.errorMessage);
         expect(emailStatus.textContent).toBe("🔴");
@@ -58,14 +66,14 @@ describe("Login Component", () => {
         const {sut, validationStub} = makeSut();
         const passwordInput = sut.getByTestId("password");
         const passwordStatus = sut.getByTestId("password-status");
+        validationStub.errorMessage = faker.random.words();
         fireEvent.input(passwordInput, {target: {value: faker.internet.password()}});
         expect(passwordStatus.title).toBe(validationStub.errorMessage);
         expect(passwordStatus.textContent).toBe("🔴");
     });
 
     it("Should show valid email state if validation succeeds", () => {
-        const {sut, validationStub} = makeSut();
-        validationStub.errorMessage = null;
+        const {sut} = makeSut();
         const emailInput = sut.getByTestId("email");
         const emailStatus = sut.getByTestId("email-status");
         fireEvent.input(emailInput, {target: {value: faker.internet.email()}});
@@ -74,8 +82,7 @@ describe("Login Component", () => {
     });
 
     it("Should show valid password state if validation succeeds", () => {
-        const {sut, validationStub} = makeSut();
-        validationStub.errorMessage = null;
+        const {sut} = makeSut();
         const passwordInput = sut.getByTestId("password");
         const passwordStatus = sut.getByTestId("password-status");
         fireEvent.input(passwordInput, {target: {value: faker.internet.password()}});
@@ -84,11 +91,10 @@ describe("Login Component", () => {
     });
 
     it("Should enable submit button if form is valid", () => {
-        const {sut, validationStub} = makeSut();
+        const {sut} = makeSut();
         const emailInput = sut.getByTestId("email");
         const passwordInput = sut.getByTestId("password");
         const submitButton = sut.getByTestId("submit-button") as HTMLButtonElement;
-        validationStub.errorMessage = null;
         fireEvent.input(emailInput, {target: {value: faker.internet.email()}});
         fireEvent.input(passwordInput, {target: {value: faker.internet.password()}});
         expect(submitButton.disabled).toBeFalsy();
