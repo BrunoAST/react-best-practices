@@ -1,4 +1,5 @@
 import React, {useEffect, useState} from "react";
+import {Link} from "react-router-dom";
 import Styles from "./login.module.scss";
 import LoginHeader from "../../components/LoginHeader/LoginHeader";
 import Footer from "../../components/Footer/Footer";
@@ -7,8 +8,6 @@ import FormStatus from "../../components/FormStatus/FormStatus";
 import Context from "../../context/form/form-context";
 import {Validation} from "../../protocols/validation";
 import {Authentication} from "../../../domain/usecases/authentication";
-import {Simulate} from "react-dom/test-utils";
-
 
 type Props = {
     validation: Validation;
@@ -73,7 +72,9 @@ const Login: React.FC<Props> = ({validation, authentication}: Props) => {
                     >
                         Entrar
                     </button>
-                    <span className={Styles.link}>Criar conta</span>
+                    <Link data-testid="sign-up" to="/signup">
+                        <span className={Styles.link}>Criar conta</span>
+                    </Link>
 
                     <FormStatus/>
                 </form>
