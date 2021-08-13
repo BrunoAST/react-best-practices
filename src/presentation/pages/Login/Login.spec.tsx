@@ -2,10 +2,14 @@ import React from "react";
 import {cleanup, fireEvent, render, RenderResult, waitFor} from "@testing-library/react";
 import faker from "faker";
 import "jest-localstorage-mock";
+import {Router} from "react-router-dom";
+import {createMemoryHistory} from "history";
 import Login from "./Login";
 import {ValidationStub} from "../../test/mock-validation";
 import {AuthenticationSpy} from "../../test/mock-authentication";
 import {InvalidCredentialsError} from "../../../domain/errors/invalid-credentials-error";
+
+const history = createMemoryHistory();
 
 type SutTypes = {
     sut: RenderResult;
@@ -20,7 +24,11 @@ const makeSut = (params?: SutParams): SutTypes => {
     const validationStub = new ValidationStub();
     const authenticationSpy = new AuthenticationSpy();
     validationStub.errorMessage = params?.validationError;
-    const sut = render(<Login validation={validationStub} authentication={authenticationSpy}/>);
+    const sut = render(
+        <Router history={history}>
+            <Login validation={validationStub} authentication={authenticationSpy}/>
+        </Router>
+    );
     return {sut, authenticationSpy};
 }
 
@@ -50,7 +58,7 @@ const simulateStatusForField = (sut: RenderResult, fieldName: string, validation
 }
 
 beforeEach(() => {
-   localStorage.clear();
+    localStorage.clear();
 });
 
 afterEach(() => {
@@ -170,5 +178,13 @@ describe("Login Component", () => {
         await waitFor(() => sut.getByTestId("form"));
         expect(localStorage.setItem)
             .toHaveBeenCalledWith("accessToken", authenticationSpy.account.accessToken);
+    });
+
+    it("Should go to sign up page", async () => {
+        const {sut} = makeSut();
+        const signUp = sut.getByTestId("sign-up");
+        fireEvent.click(signUp);
+        expect(history.length).toBe(2);
+        expect(history.location.pathname).toBe("/signup");
     });
 });
