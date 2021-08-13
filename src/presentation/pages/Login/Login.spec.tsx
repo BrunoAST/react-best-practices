@@ -1,6 +1,7 @@
 import React from "react";
 import {cleanup, fireEvent, render, RenderResult, waitFor} from "@testing-library/react";
 import faker from "faker";
+import "jest-localstorage-mock";
 import Login from "./Login";
 import {ValidationStub} from "../../test/mock-validation";
 import {AuthenticationSpy} from "../../test/mock-authentication";
@@ -47,6 +48,10 @@ const simulateStatusForField = (sut: RenderResult, fieldName: string, validation
     expect(emailStatus.title).toBe(validationError || "Tudo certo");
     expect(emailStatus.textContent).toBe(validationError ? "🔴" : "🟢");
 }
+
+beforeEach(() => {
+   localStorage.clear();
+});
 
 afterEach(() => {
     cleanup();
@@ -157,5 +162,13 @@ describe("Login Component", () => {
         simulateValidSubmit(sut);
         const errorWrap = await waitFor(() => sut.getByTestId("error-wrap"));
         expect(errorWrap.childElementCount).toBe(1);
+    });
+
+    it("Should add accessToken to local storage on success", async () => {
+        const {sut, authenticationSpy} = makeSut();
+        simulateValidSubmit(sut);
+        await waitFor(() => sut.getByTestId("form"));
+        expect(localStorage.setItem)
+            .toHaveBeenCalledWith("accessToken", authenticationSpy.account.accessToken);
     });
 });
