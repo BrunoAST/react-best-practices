@@ -3,19 +3,8 @@ import {cleanup, fireEvent, render, RenderResult} from "@testing-library/react";
 import faker from "faker";
 import Login from "./Login";
 import {ValidationStub} from "../../test/mock-validation";
-import {Authentication, AuthenticationParams} from "../../../domain/usecases/authentication";
-import {AccountModel} from "../../../domain/models/account-model";
-import {mockAccountModel} from "../../../domain/test/mock-account";
+import {AuthenticationSpy} from "../../test/mock-authentication";
 
-class AuthenticationSpy implements Authentication {
-    account = mockAccountModel();
-    params: AuthenticationParams;
-
-    async auth(params: AuthenticationParams): Promise<AccountModel> {
-        this.params = params;
-        return Promise.resolve(this.account);
-    }
-}
 
 type SutTypes = {
     sut: RenderResult;
@@ -137,7 +126,6 @@ describe("Login Component", () => {
         fireEvent.input(emailInput, {target: {value: email}});
         fireEvent.input(passwordInput, {target: {value: password}});
         fireEvent.click(submitButton);
-        const spinner = sut.getByTestId("spinner");
         expect(authenticationSpy.params).toEqual({email, password});
     });
 });
