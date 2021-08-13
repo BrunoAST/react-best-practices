@@ -7,6 +7,8 @@ import FormStatus from "../../components/FormStatus/FormStatus";
 import Context from "../../context/form/form-context";
 import {Validation} from "../../protocols/validation";
 import {Authentication} from "../../../domain/usecases/authentication";
+import {Simulate} from "react-dom/test-utils";
+import error = Simulate.error;
 
 type Props = {
     validation: Validation;
@@ -31,11 +33,15 @@ const Login: React.FC<Props> = ({validation, authentication}: Props) => {
         });
     }, [state.email, state.password]);
 
-    const handleSubmit = async (event: React.FormEvent<HTMLFormElement>): Promise<void> => {
+    const handleSubmit = (event: React.FormEvent<HTMLFormElement>): Promise<void> => {
         event.preventDefault();
         if (state.isLoading || state.emailError || state.passwordError) return;
         setState({...state, isLoading: true});
-        await authentication.auth({email: state.email, password: state.password});
+        authentication.auth({email: state.email, password: state.password})
+            .then()
+            .catch(error => {
+                setState({...state, isLoading: false, mainError: error.message});
+            });
     }
 
     return (
