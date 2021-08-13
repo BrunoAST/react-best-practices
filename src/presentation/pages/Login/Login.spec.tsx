@@ -9,7 +9,7 @@ import {ValidationStub} from "../../test/mock-validation";
 import {AuthenticationSpy} from "../../test/mock-authentication";
 import {InvalidCredentialsError} from "../../../domain/errors/invalid-credentials-error";
 
-const history = createMemoryHistory();
+const history = createMemoryHistory({initialEntries: ["/login"]});
 
 type SutTypes = {
     sut: RenderResult;
@@ -178,6 +178,14 @@ describe("Login Component", () => {
         await waitFor(() => sut.getByTestId("form"));
         expect(localStorage.setItem)
             .toHaveBeenCalledWith("accessToken", authenticationSpy.account.accessToken);
+    });
+
+    it("Should navigate to home page", async () => {
+        const {sut} = makeSut();
+        simulateValidSubmit(sut);
+        await waitFor(() => sut.getByTestId("form"));
+        expect(history.length).toBe(1);
+        expect(history.location.pathname).toBe("/");
     });
 
     it("Should go to sign up page", async () => {
