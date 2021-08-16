@@ -1,6 +1,7 @@
 import {FieldValidation} from "../../protocols/field-validation";
 import {RequiredFieldValidation} from "../required-field/required-field-validation";
 import {EmailValidation} from "../email/email-validation";
+import {MinLengthValidation} from "../min-length/min-length-validation";
 
 export class ValidationBuilder {
     private constructor(
@@ -21,6 +22,11 @@ export class ValidationBuilder {
 
     email(): ValidationBuilder {
         this.validations.push(new EmailValidation(this.fieldName));
+        return this;
+    }
+
+    minLength(minLength: number = 0): ValidationBuilder {
+        this.validations.push(new MinLengthValidation(this.fieldName, minLength));
         return this;
     }
 
