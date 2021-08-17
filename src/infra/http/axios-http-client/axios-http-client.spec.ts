@@ -1,5 +1,5 @@
 import {AxiosHttpClient} from "./axios-http-client";
-import {mockAxios} from "../test/mock-axios";
+import {mockAxios, mockHttpResponse} from "../test/mock-axios";
 import {mockPostRequest} from "../../../data/test/mock-http-post";
 import axios from "axios";
 
@@ -29,6 +29,13 @@ describe("AxiosHttpClient", () => {
         const promise = sut.post(mockPostRequest());
         // mock: has the result of mockResolvedValue
         // position 0: mock has 2 values: resolved and reject
+        expect(promise).toEqual(mockedAxios.post.mock.results[0].value);
+    });
+
+    it("Should return the correct statusCode and body on failure", () => {
+        const {sut, mockedAxios} = makeSut();
+        mockedAxios.post.mockRejectedValueOnce({response: mockHttpResponse()});
+        const promise = sut.post(mockPostRequest());
         expect(promise).toEqual(mockedAxios.post.mock.results[0].value);
     });
 });
