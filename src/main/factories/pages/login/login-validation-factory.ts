@@ -4,6 +4,6 @@ import {ValidationBuilder} from "../../../../validation/validators/builder/valid
 export function makeLoginValidation(): ValidationComposite {
     return new ValidationComposite([
         ...ValidationBuilder.field("email").required().email().build(),
-        ...ValidationBuilder.field("password").required().minLength(5).build()
+        ...ValidationBuilder.field("password").required().minLength(5).build(),
     ]);
 }
