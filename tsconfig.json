@@ -11,7 +11,6 @@
         "module": "ESNext",
         "moduleResolution": "node",
         "jsx": "react",
-        "rootDir": "src",
         "baseUrl": "src",
         "allowJs": true,
         "resolveJsonModule": true
