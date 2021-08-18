@@ -1,0 +1,25 @@
+name: CI
+
+on:
+  push:
+    branches: [ master ]
+    
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '14'
+          cache: 'npm'
+
+      - name: Run install dependencies
+        run: npm install
+        
+      - name: Run audit
+        run: npm audit fix
+
+      - name: Run test:ci
+        run: npm run test:ci
