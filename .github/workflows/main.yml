@@ -1,0 +1,16 @@
+name: CI
+
+on:
+  push:
+    branches: [ master ]
+    
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      # Runs a single command using the runners shell
+      - name: Run test:ci
+        run: npm run test:ci
