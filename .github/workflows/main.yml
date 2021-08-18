@@ -23,3 +23,9 @@ jobs:
 
       - name: Run test:ci
         run: npm run test:ci
+      
+      - name: Coveralls GitHub Action
+      - uses: coverallsapp/github-action@1.1.3
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          flag-name: Unit
