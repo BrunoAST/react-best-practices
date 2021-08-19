@@ -39,12 +39,13 @@ const Login: React.FC<Props> = ({validation, authentication, saveAccessToken}: P
         event.preventDefault();
         if (state.isLoading || state.emailError || state.passwordError) return;
         setState({...state, isLoading: true});
-        authentication.auth({email: state.email, password: state.password})
-            .then((account) => {
-                saveAccessToken.save(account.accessToken);
-                history.replace("/");
-            })
-            .catch(error => setState({...state, isLoading: false, mainError: error.message}));
+        try {
+            const {accessToken} = await authentication.auth({email: state.email, password: state.password});
+            await saveAccessToken.save(accessToken);
+            history.replace("/");
+        } catch (error) {
+            setState({...state, isLoading: false, mainError: error.message});
+        }
     }
 
     return (
@@ -73,6 +74,7 @@ const Login: React.FC<Props> = ({validation, authentication, saveAccessToken}: P
                     >
                         Entrar
                     </button>
+
                     <Link className={Styles.link} data-testid="sign-up" to="/signup">
                         <span>Criar conta</span>
                     </Link>
