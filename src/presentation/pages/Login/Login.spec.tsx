@@ -1,19 +1,24 @@
 import React from "react";
-import {cleanup, fireEvent, render, RenderResult, waitFor} from "@testing-library/react";
+import {cleanup, fireEvent, render, RenderResult} from "@testing-library/react";
 import faker from "faker";
-import "jest-localstorage-mock";
 import {Router} from "react-router-dom";
 import {createMemoryHistory} from "history";
 import Login from "./Login";
 import {ValidationStub} from "../../test/mock-validation";
 import {AuthenticationSpy} from "../../test/mock-authentication";
+import {SaveAccessTokenMock} from "../../test/mock-save-access-token";
 import {InvalidCredentialsError} from "../../../domain/errors/invalid-credentials-error";
+import {
+    populateEmailField, populatePasswordField, simulateValidSubmit, testStatusForField,
+    testButtonIsDisabled, testElementExists, testElementText, testErrorWrapChildCount
+} from "./login-test-helper";
 
 const history = createMemoryHistory({initialEntries: ["/login"]});
 
 type SutTypes = {
     sut: RenderResult;
     authenticationSpy: AuthenticationSpy;
+    saveAccessTokenMock: SaveAccessTokenMock;
 }
 
 type SutParams = {
@@ -23,64 +28,19 @@ type SutParams = {
 const makeSut = (params?: SutParams): SutTypes => {
     const validationStub = new ValidationStub();
     const authenticationSpy = new AuthenticationSpy();
+    const saveAccessTokenMock = new SaveAccessTokenMock();
     validationStub.errorMessage = params?.validationError;
     const sut = render(
         <Router history={history}>
-            <Login validation={validationStub} authentication={authenticationSpy}/>
+            <Login
+                validation={validationStub}
+                authentication={authenticationSpy}
+                saveAccessToken={saveAccessTokenMock}
+            />
         </Router>
     );
-    return {sut, authenticationSpy};
+    return {sut, authenticationSpy, saveAccessTokenMock};
 }
-
-const simulateValidSubmit = async (
-    sut: RenderResult, email = faker.internet.email(), password = faker.internet.password()
-): Promise<void> => {
-    populateEmailField(sut, email);
-    populatePasswordField(sut, password);
-    const form = sut.getByTestId("form") as HTMLButtonElement;
-    fireEvent.submit(form);
-    await waitFor(() => form);
-}
-
-const populateEmailField = (sut: RenderResult, email = faker.internet.email()): void => {
-    const emailInput = sut.getByTestId("email");
-    fireEvent.input(emailInput, {target: {value: email}});
-}
-
-const populatePasswordField = (sut: RenderResult, password = faker.internet.password()): void => {
-    const passwordInput = sut.getByTestId("password");
-    fireEvent.input(passwordInput, {target: {value: password}});
-}
-
-const testStatusForField = (sut: RenderResult, fieldName: string, validationError?: string): void => {
-    const emailStatus = sut.getByTestId(`${fieldName}-status`);
-    expect(emailStatus.title).toBe(validationError || "Tudo certo");
-    expect(emailStatus.textContent).toBe(validationError ? "🔴" : "🟢");
-}
-
-const testErrorWrapChildCount = (sut: RenderResult, count: number): void => {
-    const errorWrap = sut.getByTestId("error-wrap");
-    expect(errorWrap.childElementCount).toBe(count);
-}
-
-const testElementExists = (sut: RenderResult, fieldName: string): void => {
-    const element = sut.getByTestId(fieldName);
-    expect(element).toBeTruthy();
-}
-
-const testElementText = (sut: RenderResult, fieldName: string, text: string): void => {
-    const element = sut.getByTestId(fieldName);
-    expect(element.textContent).toBe(text);
-}
-
-const testButtonIsDisabled = (sut: RenderResult, fieldName: string, isDisabled: boolean): void => {
-    const button = sut.getByTestId(fieldName) as HTMLButtonElement;
-    expect(button.disabled).toBe(isDisabled);
-}
-
-beforeEach(() => {
-    localStorage.clear();
-});
 
 afterEach(() => {
     cleanup();
@@ -114,7 +74,6 @@ describe("Login Component", () => {
         const validationError = faker.random.words();
         const {sut} = makeSut({validationError});
         populateEmailField(sut);
-
     });
 
     it("Should show password error if validation fails", () => {
@@ -187,11 +146,10 @@ describe("Login Component", () => {
         testErrorWrapChildCount(sut, 1);
     });
 
-    it("Should add accessToken to local storage on success", async () => {
-        const {sut, authenticationSpy} = makeSut();
+    it("Should call SaveAccessToken on success", async () => {
+        const {sut, authenticationSpy, saveAccessTokenMock} = makeSut();
         await simulateValidSubmit(sut);
-        expect(localStorage.setItem)
-            .toHaveBeenCalledWith("accessToken", authenticationSpy.account.accessToken);
+        expect(saveAccessTokenMock.accessToken).toBe(authenticationSpy.account.accessToken);
     });
 
     it("Should navigate to home page", async () => {
