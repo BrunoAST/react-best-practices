@@ -152,6 +152,15 @@ describe("Login Component", () => {
         expect(saveAccessTokenMock.accessToken).toBe(authenticationSpy.account.accessToken);
     });
 
+    it("Should present error if SaveAccessToken fails", async () => {
+        const {sut, saveAccessTokenMock} = makeSut();
+        const error = new Error(faker.random.words());
+        jest.spyOn(saveAccessTokenMock, "save").mockReturnValueOnce(Promise.reject(error));
+        await simulateValidSubmit(sut);
+        testElementText(sut, "main-error", error.message);
+        testErrorWrapChildCount(sut, 1);
+    });
+
     it("Should navigate to home page", async () => {
         const {sut} = makeSut();
         await simulateValidSubmit(sut);
