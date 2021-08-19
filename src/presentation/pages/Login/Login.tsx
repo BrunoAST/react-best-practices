@@ -8,13 +8,15 @@ import FormStatus from "../../components/FormStatus/FormStatus";
 import Context from "../../context/form/form-context";
 import {Validation} from "../../protocols/validation";
 import {Authentication} from "../../../domain/usecases/authentication";
+import {SaveAccessToken} from "../../../domain/usecases/save-access-token";
 
 type Props = {
     validation: Validation;
     authentication: Authentication;
+    saveAccessToken: SaveAccessToken
 }
 
-const Login: React.FC<Props> = ({validation, authentication}: Props) => {
+const Login: React.FC<Props> = ({validation, authentication, saveAccessToken}: Props) => {
     const history = useHistory();
     const [state, setState] = useState({
         isLoading: false,
@@ -33,18 +35,16 @@ const Login: React.FC<Props> = ({validation, authentication}: Props) => {
         });
     }, [state.email, state.password]);
 
-    const handleSubmit = (event: React.FormEvent<HTMLFormElement>): Promise<void> => {
+    const handleSubmit = async (event: React.FormEvent<HTMLFormElement>): Promise<void> => {
         event.preventDefault();
         if (state.isLoading || state.emailError || state.passwordError) return;
         setState({...state, isLoading: true});
         authentication.auth({email: state.email, password: state.password})
             .then((account) => {
-                localStorage.setItem("accessToken", account.accessToken);
+                saveAccessToken.save(account.accessToken);
                 history.replace("/");
             })
-            .catch(error => {
-                setState({...state, isLoading: false, mainError: error.message});
-            });
+            .catch(error => setState({...state, isLoading: false, mainError: error.message}));
     }
 
     return (
