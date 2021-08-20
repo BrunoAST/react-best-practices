@@ -3,6 +3,7 @@ import {AccountModel} from "../../../domain/models/account-model";
 import {HttpPostClient} from "../../protocols/http/http-post-client";
 import {EmailInUseError} from "../../../domain/errors/email-in-use-error";
 import {HttpStatusCode} from "../../protocols/http/http-response";
+import {UnexpectedError} from "../../../domain/errors/unexpected-error";
 
 export class RemoteAddAccount implements AddAccount {
     constructor(
@@ -17,8 +18,9 @@ export class RemoteAddAccount implements AddAccount {
             body: params,
         });
         switch (httpResponse.statusCode) {
+            case HttpStatusCode.ok: return null;
             case HttpStatusCode.forbidden: throw new EmailInUseError();
-            default: return null;
+            default: throw new UnexpectedError();
         }
     }
 }
