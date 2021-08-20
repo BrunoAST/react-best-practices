@@ -6,6 +6,7 @@ import {AddAccountParams} from "../../../domain/usecases/add-account";
 import {mockAddAccountParams} from "../../../domain/test/mock-add-account";
 import {HttpStatusCode} from "../../protocols/http/http-response";
 import {EmailInUseError} from "../../../domain/errors/email-in-use-error";
+import {UnexpectedError} from "../../../domain/errors/unexpected-error";
 
 type SutTypes = {
     sut: RemoteAddAccount;
@@ -41,5 +42,14 @@ describe(`RemoteAddAccount`, () => {
         httpPostClientSpy.response = {statusCode: HttpStatusCode.forbidden};
         const promise = sut.add(mockAddAccountParams());
         await expect(promise).rejects.toThrow(new EmailInUseError());
+    });
+
+    it(`Should throw UnexpectedError if httpClient returns 400`, async () => {
+        const {sut, httpPostClientSpy} = makeSut();
+        httpPostClientSpy.response = {
+            statusCode: HttpStatusCode.badRequest
+        };
+        const promise = sut.add(mockAddAccountParams());
+        await expect(promise).rejects.toThrow(new UnexpectedError());
     });
 });
