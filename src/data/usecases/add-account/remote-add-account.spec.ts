@@ -4,6 +4,7 @@ import {AccountModel} from "../../../domain/models/account-model";
 import {RemoteAddAccount} from "./remote-add-account";
 import {AddAccountParams} from "../../../domain/usecases/add-account";
 import {mockAddAccount} from "../../../domain/test/mock-add-account";
+import {mockAuthentication} from "../../../domain/test/mock-account";
 
 type SutTypes = {
     sut: RemoteAddAccount;
@@ -25,5 +26,12 @@ describe(`RemoteAddAccount`, () => {
         const {sut, httpPostClientSpy} = makeSut(url);
         await sut.add(mockAddAccount());
         expect(httpPostClientSpy.url).toBe(url);
+    });
+
+    it(`Should call HttpClientPostClient with correct body`, async () => {
+        const {sut, httpPostClientSpy} = makeSut();
+        const addAccountParams = mockAddAccount();
+        await sut.add(addAccountParams);
+        expect(httpPostClientSpy.body).toEqual(addAccountParams);
     });
 });
