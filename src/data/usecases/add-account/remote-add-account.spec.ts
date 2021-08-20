@@ -7,7 +7,6 @@ import {mockAddAccountParams} from "../../../domain/test/mock-add-account";
 import {HttpStatusCode} from "../../protocols/http/http-response";
 import {EmailInUseError} from "../../../domain/errors/email-in-use-error";
 import {UnexpectedError} from "../../../domain/errors/unexpected-error";
-import {mockAuthentication} from "../../../domain/test/mock-account";
 
 type SutTypes = {
     sut: RemoteAddAccount;
@@ -58,6 +57,15 @@ describe(`RemoteAddAccount`, () => {
         const {sut, httpPostClientSpy} = makeSut();
         httpPostClientSpy.response = {
             statusCode: HttpStatusCode.serverError
+        };
+        const promise = sut.add(mockAddAccountParams());
+        await expect(promise).rejects.toThrow(new UnexpectedError());
+    });
+
+    it(`Should throw UnexpectedError if httpClient returns 404`, async () => {
+        const {sut, httpPostClientSpy} = makeSut();
+        httpPostClientSpy.response = {
+            statusCode: HttpStatusCode.notFound
         };
         const promise = sut.add(mockAddAccountParams());
         await expect(promise).rejects.toThrow(new UnexpectedError());
