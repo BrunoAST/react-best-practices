@@ -1,7 +1,7 @@
 import faker from "faker";
 import {AddAccountParams} from "../usecases/add-account";
 
-export const mockAddAccount = (): AddAccountParams => {
+export const mockAddAccountParams = (): AddAccountParams => {
     const password = faker.internet.password();
 
     return {
