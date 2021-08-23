@@ -147,7 +147,7 @@ describe("Login Component", () => {
     it("Should hide spinner if Authentication fails", async () => {
         const {sut, authenticationSpy} = makeSut();
         const error = new InvalidCredentialsError();
-        jest.spyOn(authenticationSpy, "auth").mockReturnValueOnce(Promise.reject(error));
+        jest.spyOn(authenticationSpy, "auth").mockRejectedValueOnce(error);
         await simulateLoginValidSubmit(sut);
         testChildCount(sut, "error-wrap", 1);
     });
@@ -161,7 +161,7 @@ describe("Login Component", () => {
     it("Should present error if SaveAccessToken fails", async () => {
         const {sut, saveAccessTokenMock} = makeSut();
         const error = new Error(faker.random.words());
-        jest.spyOn(saveAccessTokenMock, "save").mockReturnValueOnce(Promise.reject(error));
+        jest.spyOn(saveAccessTokenMock, "save").mockRejectedValueOnce(error);
         await simulateLoginValidSubmit(sut);
         testElementText(sut, "main-error", error.message);
         testChildCount(sut, "error-wrap", 1);

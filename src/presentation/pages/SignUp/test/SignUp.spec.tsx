@@ -17,6 +17,7 @@ import {simulateValidSignUpSubmit} from "./signup-test-helper";
 import {AddAccountSpy} from "../../../test/mock-add-account";
 import {InvalidCredentialsError} from "../../../../domain/errors/invalid-credentials-error";
 import {SaveAccessTokenMock} from "../../../test/mock-save-access-token";
+import {simulateLoginValidSubmit} from "../../Login/test/login-test-helper";
 
 const history = createMemoryHistory({initialEntries: [ROUTES.SIGNUP]});
 
@@ -166,7 +167,7 @@ describe("SignUp Component", () => {
     it("Should present error if AddAccount fails", async () => {
         const {sut, addAccountSpy} = makeSut();
         const error = new InvalidCredentialsError();
-        jest.spyOn(addAccountSpy, "add").mockReturnValueOnce(Promise.reject(error));
+        jest.spyOn(addAccountSpy, "add").mockRejectedValueOnce(error);
         await simulateValidSignUpSubmit(sut);
         testElementText(sut, "main-error", error.message);
         testChildCount(sut, "error-wrap", 1);
@@ -178,5 +179,14 @@ describe("SignUp Component", () => {
         expect(saveAccessTokenMock.accessToken).toBe(addAccountSpy.account.accessToken);
         expect(history.length).toBe(1);
         expect(history.location.pathname).toBe("/");
+    });
+
+    it("Should present error if SaveAccessToken fails", async () => {
+        const {sut, saveAccessTokenMock} = makeSut();
+        const error = new Error(faker.random.words());
+        jest.spyOn(saveAccessTokenMock, "save").mockRejectedValueOnce(error);
+        await simulateLoginValidSubmit(sut);
+        testElementText(sut, "main-error", error.message);
+        testChildCount(sut, "error-wrap", 1);
     });
 });
