@@ -13,11 +13,13 @@ import {
 } from "../../../test/form-helper";
 import {ValidationStub} from "../../../test/mock-validation";
 import {simulateValidSignUpSubmit} from "./signup-test-helper";
+import {AddAccountSpy} from "../../../test/mock-add-account";
 
 const history = createMemoryHistory({initialEntries: [ROUTES.SIGNUP]});
 
 type SutTypes = {
     sut: RenderResult;
+    addAccountSpy: AddAccountSpy;
 }
 
 type SutParams = {
@@ -27,12 +29,14 @@ type SutParams = {
 const makeSut = (params?: SutParams): SutTypes => {
     const validationStub = new ValidationStub();
     validationStub.errorMessage = params?.validationError;
+    const addAccountSpy = new AddAccountSpy()
     const sut = render(
         <SignUp
             validation={validationStub}
+            addAccount={addAccountSpy}
         />
     );
-    return {sut};
+    return {sut, addAccountSpy};
 }
 
 afterEach(() => {
@@ -120,5 +124,19 @@ describe("SignUp Component", () => {
         const {sut} = makeSut();
         await simulateValidSignUpSubmit(sut);
         testElementExists(sut, "spinner");
+    });
+
+    it("Should call AddAccount with correct values", async () => {
+        const {sut, addAccountSpy} = makeSut();
+        const name = faker.name.firstName();
+        const email = faker.internet.email();
+        const password = faker.internet.password();
+        await simulateValidSignUpSubmit(sut, name, email, password);
+        expect(addAccountSpy.params).toEqual({
+            name,
+            email,
+            password,
+            passwordConfirmation: password
+        });
     });
 });
