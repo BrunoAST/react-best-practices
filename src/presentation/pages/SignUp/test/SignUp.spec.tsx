@@ -1,7 +1,7 @@
 import React from "react";
 import {createMemoryHistory} from "history";
 import faker from "faker";
-import {cleanup, render, RenderResult} from "@testing-library/react";
+import {cleanup, fireEvent, render, RenderResult} from "@testing-library/react";
 import {Router} from "react-router-dom";
 import {ROUTES} from "../../../components/Router/routes.const";
 import SignUp from "../SignUp";
@@ -188,5 +188,20 @@ describe("SignUp Component", () => {
         await simulateLoginValidSubmit(sut);
         testElementText(sut, "main-error", error.message);
         testChildCount(sut, "error-wrap", 1);
+    });
+
+    it("Should navigate to home page", async () => {
+        const {sut} = makeSut();
+        await simulateLoginValidSubmit(sut);
+        expect(history.length).toBe(1);
+        expect(history.location.pathname).toBe("/");
+    });
+
+    it("Should go to Login page", async () => {
+        const {sut} = makeSut();
+        const login = sut.getByTestId("login");
+        fireEvent.click(login);
+        expect(history.length).toBe(2);
+        expect(history.location.pathname).toBe(ROUTES.LOGIN);
     });
 });
