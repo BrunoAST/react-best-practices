@@ -47,14 +47,32 @@ describe("SignUp Component", () => {
         const validationError = faker.random.words();
         const {sut} = makeSut({validationError});
         testStatusForField(sut, "name", validationError);
-        testStatusForField(sut, "email", "Campo obrigatório");
-        testStatusForField(sut, "password", "Campo obrigatório");
-        testStatusForField(sut, "passwordConfirmation", "Campo obrigatório");
+        testStatusForField(sut, "email", validationError);
+        testStatusForField(sut, "password", validationError);
+        testStatusForField(sut, "passwordConfirmation", validationError);
     });
 
     it("Should show name error if validation fails", () => {
         const validationError = "Campo obrigatório";
         const {sut} = makeSut({validationError});
         populateField(sut, "name", validationError);
+    });
+
+    it("Should show email error if validation fails", () => {
+        const validationError = "Campo obrigatório";
+        const {sut} = makeSut({validationError});
+        populateField(sut, "email", validationError);
+    });
+
+    it("Should show password error if validation fails", () => {
+        const validationError = "Campo obrigatório";
+        const {sut} = makeSut({validationError});
+        populateField(sut, "password", validationError);
+    });
+
+    it("Should show passwordConfirmation error if validation fails", () => {
+        const validationError = "Campo obrigatório";
+        const {sut} = makeSut({validationError});
+        populateField(sut, "passwordConfirmation", validationError);
     });
 });
