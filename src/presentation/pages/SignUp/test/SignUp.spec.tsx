@@ -139,4 +139,11 @@ describe("SignUp Component", () => {
             passwordConfirmation: password
         });
     });
+
+    it("Should call AddAccount only once", async () => {
+        const {sut, addAccountSpy} = makeSut();
+        await simulateValidSignUpSubmit(sut);
+        await simulateValidSignUpSubmit(sut);
+        expect(addAccountSpy.callsCount).toBe(1);
+    });
 });
