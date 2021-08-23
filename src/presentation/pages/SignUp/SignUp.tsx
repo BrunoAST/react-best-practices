@@ -33,16 +33,17 @@ const SignUp: React.FC<SignUpProps> = ({validation, addAccount}: SignUpProps) =>
         });
     }, [state.name, state.email, state.password, state.passwordConfirmation]);
 
-    const isFormValid = (): boolean => {
-        return (
-            !!state.name || !!state.emailError ||
+    const isFormInvalid = (): boolean => {
+        const a = (
+            !!state.nameError || !!state.emailError ||
             !!state.passwordError || !!state.passwordConfirmationError
         );
+        return a;
     }
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>): Promise<void> => {
         event.preventDefault();
-        if (state.isLoading) return;
+        if (state.isLoading || isFormInvalid()) return;
         setState({...state, isLoading: true});
         await addAccount.add({
             name: state.name,
@@ -84,7 +85,7 @@ const SignUp: React.FC<SignUpProps> = ({validation, addAccount}: SignUpProps) =>
                         className={Styles.submit}
                         type="submit"
                         data-testid="submit-button"
-                        disabled={!isFormValid()}
+                        disabled={isFormInvalid()}
                     >
                         Entrar
                     </button>
