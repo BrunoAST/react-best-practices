@@ -2,9 +2,9 @@ import React from "react";
 import {createMemoryHistory} from "history";
 import faker from "faker";
 import {render, RenderResult} from "@testing-library/react";
-import {testButtonIsDisabled, testChildCount, testStatusForField} from "../Login/login-test-helper";
-import {ROUTES} from "../../components/Router/routes.const";
-import SignUp from "./SignUp";
+import {ROUTES} from "../../../components/Router/routes.const";
+import SignUp from "../SignUp";
+import {testButtonIsDisabled, testChildCount, testStatusForField} from "../../../test/form-helper";
 
 const history = createMemoryHistory({initialEntries: [ROUTES.SIGNUP]});
 
