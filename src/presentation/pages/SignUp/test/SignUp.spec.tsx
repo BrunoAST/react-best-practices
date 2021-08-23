@@ -99,4 +99,13 @@ describe("SignUp Component", () => {
         populateField(sut, "passwordConfirmation", faker.internet.password());
         testStatusForField(sut, "passwordConfirmation");
     });
+
+    it("Should enable submit button if form is valid", () => {
+        const {sut} = makeSut();
+        populateField(sut, "name", faker.name.firstName());
+        populateField(sut, "email", faker.internet.email());
+        populateField(sut, "password", faker.internet.password());
+        populateField(sut, "passwordConfirmation", faker.internet.password());
+        testButtonIsDisabled(sut, "submit-button", false);
+    });
 });
