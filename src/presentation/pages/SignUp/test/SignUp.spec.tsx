@@ -14,6 +14,7 @@ import {
 import {ValidationStub} from "../../../test/mock-validation";
 import {simulateValidSignUpSubmit} from "./signup-test-helper";
 import {AddAccountSpy} from "../../../test/mock-add-account";
+import {simulateLoginValidSubmit} from "../../Login/test/login-test-helper";
 
 const history = createMemoryHistory({initialEntries: [ROUTES.SIGNUP]});
 
@@ -50,7 +51,8 @@ describe("SignUp Component", () => {
     });
 
     it("Should start with submit button disabled", () => {
-        const {sut} = makeSut();
+        const validationError = faker.random.words();
+        const {sut} = makeSut({validationError});
         testButtonIsDisabled(sut, "submit-button", true);
     });
 
@@ -145,5 +147,12 @@ describe("SignUp Component", () => {
         await simulateValidSignUpSubmit(sut);
         await simulateValidSignUpSubmit(sut);
         expect(addAccountSpy.callsCount).toBe(1);
+    });
+
+    it("Should not call AddAccount if form is invalid", async () => {
+        const validationError = faker.random.words();
+        const {sut, addAccountSpy} = makeSut({validationError});
+        await simulateLoginValidSubmit(sut);
+        expect(addAccountSpy.callsCount).toBe(0);
     });
 });
