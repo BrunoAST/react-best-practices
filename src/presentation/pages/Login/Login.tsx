@@ -7,11 +7,13 @@ import Input from "../../components/Input/Input";
 import FormStatus from "../../components/FormStatus/FormStatus";
 import Context from "../../context/form/form-context";
 import {LoginProps} from "./types/login-props";
+import SubmitButton from "../../components/SubmitButton/SubmitButton";
 
 const Login: React.FC<LoginProps> = ({validation, authentication, saveAccessToken}: LoginProps) => {
     const history = useHistory();
     const [state, setState] = useState({
         isLoading: false,
+        isFormInvalid: true,
         email: "",
         password: "",
         emailError: "",
@@ -20,16 +22,20 @@ const Login: React.FC<LoginProps> = ({validation, authentication, saveAccessToke
     });
 
     useEffect(() => {
+        const emailError = validation.validate("email", state.email);
+        const passwordError = validation.validate("password", state.password);
+
         setState({
             ...state,
-            emailError: validation.validate("email", state.email),
-            passwordError: validation.validate("password", state.password)
+            emailError,
+            passwordError,
+            isFormInvalid: !!emailError || !!passwordError,
         });
     }, [state.email, state.password]);
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>): Promise<void> => {
         event.preventDefault();
-        if (state.isLoading || state.emailError || state.passwordError) return;
+        if (state.isLoading || state.isFormInvalid) return;
         setState({...state, isLoading: true});
         try {
             const {accessToken} = await authentication.auth({email: state.email, password: state.password});
@@ -58,14 +64,7 @@ const Login: React.FC<LoginProps> = ({validation, authentication, saveAccessToke
                         placeholder="Digite sua senha"
                     />
 
-                    <button
-                        className={Styles.submit}
-                        type="submit"
-                        data-testid="submit-button"
-                        disabled={!!state.emailError || !!state.passwordError}
-                    >
-                        Entrar
-                    </button>
+                    <SubmitButton text="Entrar"/>
 
                     <Link className={Styles.link} data-testid="sign-up-link" to="/signup">
                         <span>Criar conta</span>

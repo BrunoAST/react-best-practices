@@ -4,7 +4,6 @@ interface CssExports {
   'formWrapper': string;
   'formWrapper__form': string;
   'link': string;
-  'submit': string;
 }
 export const cssExports: CssExports;
 export default cssExports;
