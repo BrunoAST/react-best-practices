@@ -1,10 +1,11 @@
 import React from "react";
 import {createMemoryHistory} from "history";
 import faker from "faker";
-import {render, RenderResult} from "@testing-library/react";
+import {cleanup, render, RenderResult} from "@testing-library/react";
 import {ROUTES} from "../../../components/Router/routes.const";
 import SignUp from "../SignUp";
-import {testButtonIsDisabled, testChildCount, testStatusForField} from "../../../test/form-helper";
+import {populateField, testButtonIsDisabled, testChildCount, testStatusForField} from "../../../test/form-helper";
+import {ValidationStub} from "../../../test/mock-validation";
 
 const history = createMemoryHistory({initialEntries: [ROUTES.SIGNUP]});
 
@@ -12,12 +13,24 @@ type SutTypes = {
     sut: RenderResult;
 }
 
-const makeSut = (): SutTypes => {
+type SutParams = {
+    validationError: string;
+}
+
+const makeSut = (params?: SutParams): SutTypes => {
+    const validationStub = new ValidationStub();
+    validationStub.errorMessage = params?.validationError;
     const sut = render(
-        <SignUp/>
+        <SignUp
+            validation={validationStub}
+        />
     );
     return {sut};
 }
+
+afterEach(() => {
+    cleanup();
+});
 
 describe("SignUp Component", () => {
     it("Should not render spinner and error on start", () => {
@@ -31,11 +44,17 @@ describe("SignUp Component", () => {
     });
 
     it("Should start with the initial status label for inputs", () => {
-        const validationError = "Campo obrigatório";
-        const {sut} = makeSut();
+        const validationError = faker.random.words();
+        const {sut} = makeSut({validationError});
         testStatusForField(sut, "name", validationError);
-        testStatusForField(sut, "email", validationError);
-        testStatusForField(sut, "password", validationError);
-        testStatusForField(sut, "passwordConfirmation", validationError);
+        testStatusForField(sut, "email", "Campo obrigatório");
+        testStatusForField(sut, "password", "Campo obrigatório");
+        testStatusForField(sut, "passwordConfirmation", "Campo obrigatório");
+    });
+
+    it("Should show name error if validation fails", () => {
+        const validationError = "Campo obrigatório";
+        const {sut} = makeSut({validationError});
+        populateField(sut, "name", validationError);
     });
 });
