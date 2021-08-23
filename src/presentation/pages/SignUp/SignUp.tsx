@@ -33,6 +33,13 @@ const SignUp: React.FC<Props> = ({validation}: Props) => {
         });
     }, [state.name, state.email, state.password, state.passwordConfirmation]);
 
+    const isFormValid = (): boolean => {
+        return (
+            !!state.name || !!state.emailError ||
+            !!state.passwordError || !!state.passwordConfirmationError
+        );
+    }
+
     return (
         <div className={Styles.formWrapper}>
             <LoginHeader/>
@@ -65,7 +72,7 @@ const SignUp: React.FC<Props> = ({validation}: Props) => {
                         className={Styles.submit}
                         type="submit"
                         data-testid="submit-button"
-                        disabled
+                        disabled={!isFormValid()}
                     >
                         Entrar
                     </button>
