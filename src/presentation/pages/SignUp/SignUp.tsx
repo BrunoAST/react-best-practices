@@ -1,4 +1,5 @@
 import React, {useEffect, useState} from "react";
+import {useHistory} from "react-router-dom";
 import Styles from "../../../theme/styles/form.scss";
 import LoginHeader from "../../components/LoginHeader/LoginHeader";
 import Context from "../../context/form/form-context";
@@ -7,7 +8,8 @@ import FormStatus from "../../components/FormStatus/FormStatus";
 import Footer from "../../components/Footer/Footer";
 import {SignUpProps} from "./types/signup-props";
 
-const SignUp: React.FC<SignUpProps> = ({validation, addAccount}: SignUpProps) => {
+const SignUp: React.FC<SignUpProps> = ({validation, addAccount, saveAccessToken}: SignUpProps) => {
+    const history = useHistory();
     const [state, setState] = useState({
         isLoading: false,
         name: "",
@@ -43,12 +45,14 @@ const SignUp: React.FC<SignUpProps> = ({validation, addAccount}: SignUpProps) =>
         if (state.isLoading || isFormInvalid()) return;
         try {
             setState({...state, isLoading: true});
-            await addAccount.add({
+            const {accessToken} = await addAccount.add({
                 name: state.name,
                 email: state.email,
                 password: state.password,
                 passwordConfirmation: state.passwordConfirmation,
             });
+            await saveAccessToken.save(accessToken);
+            history.replace("/");
         } catch (error) {
             setState({...state, isLoading: false, mainError: error.message});
         }
