@@ -1,7 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import Router from "../presentation/components/Router/Router";
 import "../theme/styles/global.scss";
+import Router from "../presentation/components/Router/Router";
 import {makeLogin} from "./factories/pages/login/login-factory";
 
 ReactDOM.render(

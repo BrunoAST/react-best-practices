@@ -1,4 +1,6 @@
 @import "./colors";
+@import "./input";
+@import "./button";
 
 * {
     font-family: 'Nunito', sans-serif;
@@ -10,33 +12,4 @@
 
 body {
     background-color: $background;
-}
-
-input[type="password"], input[type="email"] {
-    border: 1px solid $primaryLight;
-    line-height: 40px;
-    border-radius: 4px;
-    padding: 0 40px 0 8px;
-
-    &:focus {
-        outline-color: $primaryLight;
-    }
-}
-
-button {
-    background-color: $primary;
-    color: $white;
-    border-radius: 8px;
-    font-size: 16px;
-    border: none;
-    line-height: 60px;
-    cursor: pointer;
-
-    &:hover {
-        opacity: .9;
-    }
-    
-    &:disabled {
-        cursor: default;
-    }
 }

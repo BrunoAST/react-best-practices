@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from "react";
 import {Link, useHistory} from "react-router-dom";
-import Styles from "./login.module.scss";
+import Styles from "../../../theme/styles/form.scss";
 import LoginHeader from "../../components/LoginHeader/LoginHeader";
 import Footer from "../../components/Footer/Footer";
 import Input from "../../components/Input/Input";
@@ -49,10 +49,10 @@ const Login: React.FC<Props> = ({validation, authentication, saveAccessToken}: P
     }
 
     return (
-        <div className={Styles.login}>
+        <div className={Styles.formWrapper}>
             <LoginHeader/>
             <Context.Provider value={{state, setState}}>
-                <form data-testid="form" className={Styles.login__form} onSubmit={handleSubmit}>
+                <form data-testid="form" className={Styles.formWrapper__form} onSubmit={handleSubmit}>
                     <h2>Login</h2>
 
                     <Input

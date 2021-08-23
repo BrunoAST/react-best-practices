@@ -1,0 +1,19 @@
+@import "colors";
+
+button {
+    background-color: $primary;
+    color: $white;
+    border-radius: 8px;
+    font-size: 16px;
+    border: none;
+    line-height: 60px;
+    cursor: pointer;
+
+    &:hover {
+        opacity: .9;
+    }
+
+    &:disabled {
+        cursor: default;
+    }
+}
