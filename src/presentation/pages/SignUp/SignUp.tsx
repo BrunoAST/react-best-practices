@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {useHistory} from "react-router-dom";
+import {Link, useHistory} from "react-router-dom";
 import Styles from "../../../theme/styles/form.scss";
 import LoginHeader from "../../components/LoginHeader/LoginHeader";
 import Context from "../../context/form/form-context";
@@ -7,6 +7,7 @@ import Input from "../../components/Input/Input";
 import FormStatus from "../../components/FormStatus/FormStatus";
 import Footer from "../../components/Footer/Footer";
 import {SignUpProps} from "./types/signup-props";
+import {ROUTES} from "../../components/Router/routes.const";
 
 const SignUp: React.FC<SignUpProps> = ({validation, addAccount, saveAccessToken}: SignUpProps) => {
     const history = useHistory();
@@ -95,9 +96,9 @@ const SignUp: React.FC<SignUpProps> = ({validation, addAccount, saveAccessToken}
                         Entrar
                     </button>
 
-                    {/*<Link className={Styles.link} data-testid="sign-up" to={ROUTES.LOGIN}>*/}
-                    <span>Voltar para Login</span>
-                    {/*</Link>*/}
+                    <Link className={Styles.link} data-testid="login" to={ROUTES.LOGIN}>
+                        <span>Voltar para Login</span>
+                    </Link>
 
                     <FormStatus/>
                 </form>
