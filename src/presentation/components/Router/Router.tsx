@@ -1,13 +1,10 @@
 import React from "react";
 import {BrowserRouter, Switch, Route} from "react-router-dom";
-import {ROUTES} from "./routes.const";
+import {ROUTES} from "./constants/routes.const";
 import SignUp from "../../pages/SignUp/SignUp";
+import {RouterProps} from "./types/router-props";
 
-type Props = {
-    makeLogin: React.FC;
-}
-
-const Router: React.FC<Props> = ({makeLogin}: Props) => {
+const Router: React.FC<RouterProps> = ({makeLogin}: RouterProps) => {
     return (
       <BrowserRouter>
           <Switch>

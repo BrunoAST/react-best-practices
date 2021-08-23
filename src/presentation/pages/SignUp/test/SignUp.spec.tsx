@@ -3,7 +3,7 @@ import {createMemoryHistory} from "history";
 import faker from "faker";
 import {cleanup, fireEvent, render, RenderResult} from "@testing-library/react";
 import {Router} from "react-router-dom";
-import {ROUTES} from "../../../components/Router/routes.const";
+import {ROUTES} from "../../../components/Router/constants/routes.const";
 import SignUp from "../SignUp";
 import {
     populateField,

@@ -8,7 +8,7 @@ import {ValidationStub} from "../../../test/mock-validation";
 import {AuthenticationSpy} from "../../../test/mock-authentication";
 import {SaveAccessTokenMock} from "../../../test/mock-save-access-token";
 import {InvalidCredentialsError} from "../../../../domain/errors/invalid-credentials-error";
-import {ROUTES} from "../../../components/Router/routes.const";
+import {ROUTES} from "../../../components/Router/constants/routes.const";
 import {simulateLoginValidSubmit} from "./login-test-helper";
 import {
     populateField,
