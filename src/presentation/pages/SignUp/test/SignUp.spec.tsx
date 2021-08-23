@@ -8,13 +8,14 @@ import {
     populateField,
     testButtonIsDisabled,
     testChildCount,
-    testElementExists,
+    testElementExists, testElementText,
     testStatusForField
 } from "../../../test/form-helper";
 import {ValidationStub} from "../../../test/mock-validation";
 import {simulateValidSignUpSubmit} from "./signup-test-helper";
 import {AddAccountSpy} from "../../../test/mock-add-account";
 import {simulateLoginValidSubmit} from "../../Login/test/login-test-helper";
+import {InvalidCredentialsError} from "../../../../domain/errors/invalid-credentials-error";
 
 const history = createMemoryHistory({initialEntries: [ROUTES.SIGNUP]});
 
@@ -154,5 +155,13 @@ describe("SignUp Component", () => {
         const {sut, addAccountSpy} = makeSut({validationError});
         await simulateLoginValidSubmit(sut);
         expect(addAccountSpy.callsCount).toBe(0);
+    });
+
+    it("Should present error if AddAccount fails", async () => {
+        const {sut, addAccountSpy} = makeSut();
+        const error = new InvalidCredentialsError();
+        jest.spyOn(addAccountSpy, "add").mockReturnValueOnce(Promise.reject(error));
+        await simulateLoginValidSubmit(sut);
+        testElementText(sut, "main-error", error.message);
     });
 });
