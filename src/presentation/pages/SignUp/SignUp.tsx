@@ -1,12 +1,10 @@
 import React, {useEffect, useState} from "react";
-import {Link} from "react-router-dom";
 import Styles from "../../../theme/styles/form.scss";
 import LoginHeader from "../../components/LoginHeader/LoginHeader";
 import Context from "../../context/form/form-context";
 import Input from "../../components/Input/Input";
 import FormStatus from "../../components/FormStatus/FormStatus";
 import Footer from "../../components/Footer/Footer";
-import {ROUTES} from "../../components/Router/routes.const";
 import {SignUpProps} from "./types/signup-props";
 
 const SignUp: React.FC<SignUpProps> = ({validation, addAccount}: SignUpProps) => {
@@ -43,15 +41,15 @@ const SignUp: React.FC<SignUpProps> = ({validation, addAccount}: SignUpProps) =>
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>): Promise<void> => {
         event.preventDefault();
         if (state.isLoading || isFormInvalid()) return;
-        setState({...state, isLoading: true});
         try {
+            setState({...state, isLoading: true});
             await addAccount.add({
                 name: state.name,
                 email: state.email,
                 password: state.password,
                 passwordConfirmation: state.passwordConfirmation,
             });
-        } catch(error) {
+        } catch (error) {
             setState({...state, isLoading: false, mainError: error.message});
         }
     }
@@ -94,7 +92,7 @@ const SignUp: React.FC<SignUpProps> = ({validation, addAccount}: SignUpProps) =>
                     </button>
 
                     {/*<Link className={Styles.link} data-testid="sign-up" to={ROUTES.LOGIN}>*/}
-                        <span>Voltar para Login</span>
+                    <span>Voltar para Login</span>
                     {/*</Link>*/}
 
                     <FormStatus/>
