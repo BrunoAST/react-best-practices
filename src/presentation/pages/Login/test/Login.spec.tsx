@@ -3,16 +3,21 @@ import {cleanup, fireEvent, render, RenderResult} from "@testing-library/react";
 import faker from "faker";
 import {Router} from "react-router-dom";
 import {createMemoryHistory} from "history";
-import Login from "./Login";
-import {ValidationStub} from "../../test/mock-validation";
-import {AuthenticationSpy} from "../../test/mock-authentication";
-import {SaveAccessTokenMock} from "../../test/mock-save-access-token";
-import {InvalidCredentialsError} from "../../../domain/errors/invalid-credentials-error";
-import {ROUTES} from "../../components/Router/routes.const";
+import Login from "../Login";
+import {ValidationStub} from "../../../test/mock-validation";
+import {AuthenticationSpy} from "../../../test/mock-authentication";
+import {SaveAccessTokenMock} from "../../../test/mock-save-access-token";
+import {InvalidCredentialsError} from "../../../../domain/errors/invalid-credentials-error";
+import {ROUTES} from "../../../components/Router/routes.const";
 import {
-    populateEmailField, populatePasswordField, simulateValidSubmit, testStatusForField,
-    testButtonIsDisabled, testElementExists, testElementText, testErrorWrapChildCount
-} from "./login-test-helper";
+    populateEmailField, populatePasswordField, simulateValidSubmit} from "./login-test-helper";
+import {
+    testButtonIsDisabled,
+    testChildCount,
+    testElementExists,
+    testElementText,
+    testStatusForField
+} from "../../../test/form-helper";
 
 const history = createMemoryHistory({initialEntries: [ROUTES.LOGIN]});
 
@@ -50,7 +55,7 @@ afterEach(() => {
 describe("Login Component", () => {
     it("Should not render spinner and error on start", () => {
         const {sut} = makeSut();
-        testErrorWrapChildCount(sut, 0);
+        testChildCount(sut, "error-wrap", 0);
     });
 
     it("Should start with submit button disabled", () => {
@@ -144,7 +149,7 @@ describe("Login Component", () => {
         const error = new InvalidCredentialsError();
         jest.spyOn(authenticationSpy, "auth").mockReturnValueOnce(Promise.reject(error));
         await simulateValidSubmit(sut);
-        testErrorWrapChildCount(sut, 1);
+        testChildCount(sut, "error-wrap", 1);
     });
 
     it("Should call SaveAccessToken on success", async () => {
@@ -159,7 +164,7 @@ describe("Login Component", () => {
         jest.spyOn(saveAccessTokenMock, "save").mockReturnValueOnce(Promise.reject(error));
         await simulateValidSubmit(sut);
         testElementText(sut, "main-error", error.message);
-        testErrorWrapChildCount(sut, 1);
+        testChildCount(sut, "error-wrap", 1);
     });
 
     it("Should navigate to home page", async () => {
