@@ -1,5 +1,5 @@
 import {Validation} from "../../../protocols/validation";
 
-export type Props = {
+export type SignUpProps = {
     validation: Validation;
 }
