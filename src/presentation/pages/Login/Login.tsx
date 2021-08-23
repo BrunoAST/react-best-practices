@@ -6,9 +6,9 @@ import Footer from "../../components/Footer/Footer";
 import Input from "../../components/Input/Input";
 import FormStatus from "../../components/FormStatus/FormStatus";
 import Context from "../../context/form/form-context";
-import {Props} from "./types/login-props";
+import {LoginProps} from "./types/login-props";
 
-const Login: React.FC<Props> = ({validation, authentication, saveAccessToken}: Props) => {
+const Login: React.FC<LoginProps> = ({validation, authentication, saveAccessToken}: LoginProps) => {
     const history = useHistory();
     const [state, setState] = useState({
         isLoading: false,
