@@ -9,7 +9,7 @@ import Footer from "../../components/Footer/Footer";
 import {ROUTES} from "../../components/Router/routes.const";
 import {SignUpProps} from "./types/signup-props";
 
-const SignUp: React.FC<SignUpProps> = ({validation}: SignUpProps) => {
+const SignUp: React.FC<SignUpProps> = ({validation, addAccount}: SignUpProps) => {
     const [state, setState] = useState({
         isLoading: false,
         name: "",
@@ -43,6 +43,12 @@ const SignUp: React.FC<SignUpProps> = ({validation}: SignUpProps) => {
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>): Promise<void> => {
         event.preventDefault();
         setState({...state, isLoading: true});
+        await addAccount.add({
+            name: state.name,
+            email: state.email,
+            password: state.password,
+            passwordConfirmation: state.passwordConfirmation,
+        });
     }
 
     return (
