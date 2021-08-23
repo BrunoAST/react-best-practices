@@ -8,12 +8,13 @@ import {ValidationStub} from "../../test/mock-validation";
 import {AuthenticationSpy} from "../../test/mock-authentication";
 import {SaveAccessTokenMock} from "../../test/mock-save-access-token";
 import {InvalidCredentialsError} from "../../../domain/errors/invalid-credentials-error";
+import {ROUTES} from "../../components/Router/routes.const";
 import {
     populateEmailField, populatePasswordField, simulateValidSubmit, testStatusForField,
     testButtonIsDisabled, testElementExists, testElementText, testErrorWrapChildCount
 } from "./login-test-helper";
 
-const history = createMemoryHistory({initialEntries: ["/login"]});
+const history = createMemoryHistory({initialEntries: [ROUTES.LOGIN]});
 
 type SutTypes = {
     sut: RenderResult;

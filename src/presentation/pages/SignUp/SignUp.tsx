@@ -6,6 +6,7 @@ import Context from "../../context/form/form-context";
 import Input from "../../components/Input/Input";
 import FormStatus from "../../components/FormStatus/FormStatus";
 import Footer from "../../components/Footer/Footer";
+import {ROUTES} from "../../components/Router/routes.const";
 
 const SignUp: React.FC = () => {
     return (
@@ -30,7 +31,6 @@ const SignUp: React.FC = () => {
                         name="password"
                         placeholder="Digite sua senha"
                     />
-
                     <Input
                         type="password"
                         name="passwordConfirmation"
@@ -44,7 +44,7 @@ const SignUp: React.FC = () => {
                         Entrar
                     </button>
 
-                    <Link className={Styles.link} data-testid="sign-up" to="/login">
+                    <Link className={Styles.link} data-testid="sign-up" to={ROUTES.LOGIN}>
                         <span>Voltar para Login</span>
                     </Link>
 

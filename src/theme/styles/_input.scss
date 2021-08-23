@@ -1,6 +1,6 @@
 @import "colors";
 
-input[type="password"], input[type="email"] {
+input[type="password"], input[type="email"], input[type="text"] {
     border: 1px solid $primaryLight;
     line-height: 40px;
     border-radius: 4px;
