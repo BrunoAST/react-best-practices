@@ -7,9 +7,9 @@ import Input from "../../components/Input/Input";
 import FormStatus from "../../components/FormStatus/FormStatus";
 import Footer from "../../components/Footer/Footer";
 import {ROUTES} from "../../components/Router/routes.const";
-import {Props} from "./types/signup-props";
+import {SignUpProps} from "./types/signup-props";
 
-const SignUp: React.FC<Props> = ({validation}: Props) => {
+const SignUp: React.FC<SignUpProps> = ({validation}: SignUpProps) => {
     const [state, setState] = useState({
         isLoading: false,
         name: "",
@@ -40,11 +40,16 @@ const SignUp: React.FC<Props> = ({validation}: Props) => {
         );
     }
 
+    const handleSubmit = async (event: React.FormEvent<HTMLFormElement>): Promise<void> => {
+        event.preventDefault();
+        setState({...state, isLoading: true});
+    }
+
     return (
         <div className={Styles.formWrapper}>
             <LoginHeader/>
             <Context.Provider value={{state, setState}}>
-                <form className={Styles.formWrapper__form}>
+                <form data-testid="form" className={Styles.formWrapper__form} onSubmit={handleSubmit}>
                     <h2>Criar conta</h2>
 
                     <Input
