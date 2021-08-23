@@ -4,8 +4,15 @@ import faker from "faker";
 import {cleanup, render, RenderResult} from "@testing-library/react";
 import {ROUTES} from "../../../components/Router/routes.const";
 import SignUp from "../SignUp";
-import {populateField, testButtonIsDisabled, testChildCount, testStatusForField} from "../../../test/form-helper";
+import {
+    populateField,
+    testButtonIsDisabled,
+    testChildCount,
+    testElementExists,
+    testStatusForField
+} from "../../../test/form-helper";
 import {ValidationStub} from "../../../test/mock-validation";
+import {simulateValidSignUpSubmit} from "./signup-test-helper";
 
 const history = createMemoryHistory({initialEntries: [ROUTES.SIGNUP]});
 
@@ -107,5 +114,11 @@ describe("SignUp Component", () => {
         populateField(sut, "password", faker.internet.password());
         populateField(sut, "passwordConfirmation", faker.internet.password());
         testButtonIsDisabled(sut, "submit-button", false);
+    });
+
+    it("Should show spinner on submit", async () => {
+        const {sut} = makeSut();
+        await simulateValidSignUpSubmit(sut);
+        testElementExists(sut, "spinner");
     });
 });
