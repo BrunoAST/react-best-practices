@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {Link} from "react-router-dom";
 import Styles from "../../../theme/styles/form.scss";
 import LoginHeader from "../../components/LoginHeader/LoginHeader";
@@ -7,11 +7,12 @@ import Input from "../../components/Input/Input";
 import FormStatus from "../../components/FormStatus/FormStatus";
 import Footer from "../../components/Footer/Footer";
 import {ROUTES} from "../../components/Router/routes.const";
+import {Props} from "./types/signup-props";
 
-const SignUp: React.FC = () => {
-    const [state] = useState({
+const SignUp: React.FC<Props> = ({validation}: Props) => {
+    const [state, setState] = useState({
         isLoading: false,
-        // name: "",
+        name: "",
         // email: "",
         // password: "",
         // passwordConfirmation: "",
@@ -22,10 +23,17 @@ const SignUp: React.FC = () => {
         mainError: "",
     });
 
+    useEffect(() => {
+        setState({
+            ...state,
+            nameError: validation.validate("name", state.name),
+        });
+    }, [state.name]);
+
     return (
         <div className={Styles.formWrapper}>
             <LoginHeader/>
-            <Context.Provider value={{state}}>
+            <Context.Provider value={{state, setState}}>
                 <form className={Styles.formWrapper__form}>
                     <h2>Criar conta</h2>
 
