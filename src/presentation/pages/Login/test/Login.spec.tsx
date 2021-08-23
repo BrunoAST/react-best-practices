@@ -9,9 +9,9 @@ import {AuthenticationSpy} from "../../../test/mock-authentication";
 import {SaveAccessTokenMock} from "../../../test/mock-save-access-token";
 import {InvalidCredentialsError} from "../../../../domain/errors/invalid-credentials-error";
 import {ROUTES} from "../../../components/Router/routes.const";
+import {simulateValidSubmit} from "./login-test-helper";
 import {
-    populateEmailField, populatePasswordField, simulateValidSubmit} from "./login-test-helper";
-import {
+    populateField,
     testButtonIsDisabled,
     testChildCount,
     testElementExists,
@@ -79,32 +79,32 @@ describe("Login Component", () => {
     it("Should show email error if validation fails", () => {
         const validationError = faker.random.words();
         const {sut} = makeSut({validationError});
-        populateEmailField(sut);
+        populateField(sut, "email", faker.internet.email());
     });
 
     it("Should show password error if validation fails", () => {
         const validationError = faker.random.words();
         const {sut} = makeSut({validationError});
-        populatePasswordField(sut);
+        populateField(sut, "password", faker.internet.password());
         testStatusForField(sut, "password", validationError);
     });
 
     it("Should show valid email state if validation succeeds", () => {
         const {sut} = makeSut();
-        populateEmailField(sut);
+        populateField(sut, "email", faker.internet.email());
         testStatusForField(sut, "email");
     });
 
     it("Should show valid password state if validation succeeds", () => {
         const {sut} = makeSut();
-        populatePasswordField(sut);
+        populateField(sut, "password", faker.internet.password());
         testStatusForField(sut, "password");
     });
 
     it("Should enable submit button if form is valid", () => {
         const {sut} = makeSut();
-        populateEmailField(sut);
-        populatePasswordField(sut);
+        populateField(sut, "email", faker.internet.email());
+        populateField(sut, "password", faker.internet.password());
         testButtonIsDisabled(sut, "submit-button", false);
     });
 
