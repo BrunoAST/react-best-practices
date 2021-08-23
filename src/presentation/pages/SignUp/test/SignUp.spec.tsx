@@ -75,4 +75,28 @@ describe("SignUp Component", () => {
         const {sut} = makeSut({validationError});
         populateField(sut, "passwordConfirmation", validationError);
     });
+
+    it("Should show valid name state if validation succeeds", () => {
+        const {sut} = makeSut();
+        populateField(sut, "name", faker.name.firstName());
+        testStatusForField(sut, "name");
+    });
+
+    it("Should show email name state if validation succeeds", () => {
+        const {sut} = makeSut();
+        populateField(sut, "email", faker.internet.email());
+        testStatusForField(sut, "email");
+    });
+
+    it("Should show email password state if validation succeeds", () => {
+        const {sut} = makeSut();
+        populateField(sut, "password", faker.internet.password());
+        testStatusForField(sut, "password");
+    });
+
+    it("Should show email passwordConfirmation state if validation succeeds", () => {
+        const {sut} = makeSut();
+        populateField(sut, "passwordConfirmation", faker.internet.password());
+        testStatusForField(sut, "passwordConfirmation");
+    });
 });
