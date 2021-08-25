@@ -8,6 +8,10 @@ module.exports = {
         "!**/*.scss.d.ts"
     ],
     coverageDirectory: "coverage",
+    testPathIgnorePatterns: [
+        '<rootDir>/node_modules/',
+        '<rootDir>/src/main/test/cypress'
+    ],
     moduleNameMapper: {
         '^.+\\.(scss)$': '<rootDir>/config/style-mock.js'
     },
