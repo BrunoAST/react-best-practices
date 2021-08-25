@@ -3,17 +3,19 @@ import {RequiredFieldValidation} from "../required-field/required-field-validati
 import {ValidationBuilder} from "./validation-builder";
 import {EmailValidation} from "../email/email-validation";
 import {MinLengthValidation} from "../min-length/min-length-validation";
+import {CompareFieldsValidation} from "../compare-fields/compare-fields-validation";
 
 type SutTypes = {
     fieldName: string;
+    fieldToCompare: string;
     minLength: number;
 }
 
-const makeSut = (): SutTypes => {
-    const fieldName = faker.database.column();
+const makeSut = (fieldName = faker.database.column(), fieldToCompare = faker.database.column()): SutTypes => {
     const minLength = faker.datatype.number({max: 10});
     return {
         fieldName,
+        fieldToCompare,
         minLength,
     }
 }
@@ -38,6 +40,12 @@ describe("ValidationBuilder", () => {
         const validations = ValidationBuilder.field(fieldName).minLength(minLength).build();
         expect(validations.length).toBe(1);
         expect(validations).toEqual([new MinLengthValidation(fieldName, minLength)]);
+    });
+
+    it("Should return CompareFieldsValidation", () => {
+        const {fieldName, fieldToCompare} = makeSut();
+        const validations = ValidationBuilder.field(fieldName).sameAs(fieldToCompare).build();
+        expect(validations).toEqual([new CompareFieldsValidation(fieldName, fieldToCompare)]);
     });
 
     it("Should return a list of validations", () => {
