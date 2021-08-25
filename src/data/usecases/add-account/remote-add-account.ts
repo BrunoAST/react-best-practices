@@ -7,7 +7,7 @@ import {UnexpectedError} from "../../../domain/errors/unexpected-error";
 
 export class RemoteAddAccount implements AddAccount {
     constructor(
-        private readonly  url: string,
+        private readonly url: string,
         private readonly httpClient: HttpPostClient<AddAccountParams, AccountModel>,
     ) {
     }
