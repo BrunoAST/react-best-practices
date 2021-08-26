@@ -54,4 +54,16 @@ describe("Login", () => {
         cy.isEnabled(DATA_TEST_IDS.submitButton);
         cy.getByTestId("error-wrap").should("not.have.descendants");
     });
+
+    it("Should present error if invalid credentials provided", () => {
+        cy.getByTestId(DATA_TEST_IDS.emailField).type(faker.internet.email());
+        cy.getByTestId(DATA_TEST_IDS.passwordField).type(faker.internet.password());
+        cy.getByTestId(DATA_TEST_IDS.submitButton).click();
+        cy.getByTestId("error-wrap")
+            .getByTestId("spinner").should("exist")
+            .getByTestId("main-error").should("not.exist")
+            .getByTestId("error-wrap")
+            .getByTestId("spinner").should("not.exist")
+            .getByTestId("main-error").should("have.text", "Credenciais inválidas");
+    });
 });
