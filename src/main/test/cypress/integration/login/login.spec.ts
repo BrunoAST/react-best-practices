@@ -2,6 +2,8 @@
 
 import faker from "faker";
 
+const baseUrl = Cypress.config().baseUrl;
+
 const DATA_TEST_IDS = {
     emailStatus: "email-status",
     emailField: "email",
@@ -65,5 +67,18 @@ describe("Login", () => {
             .getByTestId("error-wrap")
             .getByTestId("spinner").should("not.exist")
             .getByTestId("main-error").should("have.text", "Credenciais inválidas");
+    });
+
+    it("Should present save access token if valid credentials provided", () => {
+        cy.getByTestId(DATA_TEST_IDS.emailField).type("mango@gmail.com");
+        cy.getByTestId(DATA_TEST_IDS.passwordField).type("12345");
+        cy.getByTestId(DATA_TEST_IDS.submitButton).click();
+        cy.getByTestId("error-wrap")
+            .getByTestId("spinner").should("exist")
+            .getByTestId("main-error").should("not.exist")
+            .getByTestId("error-wrap")
+            .getByTestId("spinner").should("not.exist");
+        cy.url().should("eq", `${baseUrl}/`);
+        cy.window().then(window => assert.isOk(window.localStorage.getItem("accessToken")));
     });
 });
