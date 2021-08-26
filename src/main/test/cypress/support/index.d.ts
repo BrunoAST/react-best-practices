@@ -6,7 +6,9 @@ declare namespace Cypress {
     interface Chainable {
         getByTestId(id: string): Chainable<Element>;
         containsErrorStatus(id: string): Chainable<Element>;
-        containsErrorMessage(id: string, errorMessage: string): Chainable<Element>;
+        containsSuccessStatus(id: string): Chainable<Element>;
+        containsAttrTitleMessage(id: string, message: string): Chainable<Element>;
         isDisabled(id: string): Chainable<Element>;
+        isEnabled(id: string): Chainable<Element>;
     }
 }

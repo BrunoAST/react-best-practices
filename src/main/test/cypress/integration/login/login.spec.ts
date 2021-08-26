@@ -21,9 +21,9 @@ describe("Login", () => {
 
     it("Should load with correct initial state", () => {
         cy.containsErrorStatus(DATA_TEST_IDS.emailStatus);
-        cy.containsErrorMessage(DATA_TEST_IDS.emailStatus, "Campo obrigatório");
+        cy.containsAttrTitleMessage(DATA_TEST_IDS.emailStatus, "Campo obrigatório");
         cy.containsErrorStatus(DATA_TEST_IDS.passwordStatus);
-        cy.containsErrorMessage(DATA_TEST_IDS.passwordStatus, "Campo obrigatório");
+        cy.containsAttrTitleMessage(DATA_TEST_IDS.passwordStatus, "Campo obrigatório");
         cy.isDisabled(DATA_TEST_IDS.submitButton);
         cy.getByTestId("error-wrap").should("not.have.descendants");
     });
@@ -31,14 +31,27 @@ describe("Login", () => {
     it("Should present error if email field is invalid", () => {
         cy.getByTestId(DATA_TEST_IDS.emailField).type(faker.random.words(5));
         cy.containsErrorStatus(DATA_TEST_IDS.emailStatus);
-        cy.containsErrorMessage(DATA_TEST_IDS.emailStatus, "Email inválido");
+        cy.containsAttrTitleMessage(DATA_TEST_IDS.emailStatus, "Email inválido");
         cy.isDisabled(DATA_TEST_IDS.submitButton);
+        cy.getByTestId("error-wrap").should("not.have.descendants");
     });
 
     it("Should present error if password field is invalid", () => {
         cy.getByTestId(DATA_TEST_IDS.passwordField).type(faker.datatype.string(4));
         cy.containsErrorStatus(DATA_TEST_IDS.passwordStatus);
-        cy.containsErrorMessage(DATA_TEST_IDS.passwordStatus, "Mínimo de 5 caracteres");
+        cy.containsAttrTitleMessage(DATA_TEST_IDS.passwordStatus, "Mínimo de 5 caracteres");
         cy.isDisabled(DATA_TEST_IDS.submitButton);
+        cy.getByTestId("error-wrap").should("not.have.descendants");
+    });
+
+    it("Should present valid state if all fields are valid", () => {
+        cy.getByTestId(DATA_TEST_IDS.emailField).type(faker.internet.email());
+        cy.getByTestId(DATA_TEST_IDS.passwordField).type(faker.internet.password());
+        cy.containsSuccessStatus(DATA_TEST_IDS.emailStatus);
+        cy.containsSuccessStatus(DATA_TEST_IDS.passwordStatus);
+        cy.containsAttrTitleMessage(DATA_TEST_IDS.emailStatus, "Tudo certo");
+        cy.containsAttrTitleMessage(DATA_TEST_IDS.passwordStatus, "Tudo certo");
+        cy.isEnabled(DATA_TEST_IDS.submitButton);
+        cy.getByTestId("error-wrap").should("not.have.descendants");
     });
 });

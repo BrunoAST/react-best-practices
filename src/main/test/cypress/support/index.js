@@ -4,10 +4,18 @@ Cypress.Commands.add("containsErrorStatus", (id) =>
     cy.getByTestId(id).should("contain.text", "🔴")
 );
 
-Cypress.Commands.add("containsErrorMessage", (id, errorMessage) =>
-    cy.getByTestId(id).should("have.attr", "title", errorMessage)
+Cypress.Commands.add("containsSuccessStatus", (id) =>
+    cy.getByTestId(id).should("contain.text", "🟢")
+);
+
+Cypress.Commands.add("containsAttrTitleMessage", (id, message) =>
+    cy.getByTestId(id).should("have.attr", "title", message)
 );
 
 Cypress.Commands.add("isDisabled", (id) =>
     cy.getByTestId(id).should("be.disabled")
+);
+
+Cypress.Commands.add("isEnabled", (id) =>
+    cy.getByTestId(id).should("be.enabled")
 );
