@@ -57,6 +57,7 @@ const Login: React.FC<LoginProps> = ({validation, authentication, saveAccessToke
                     <Input
                         type="email"
                         name="email"
+                        autoFocus
                         placeholder="Digite seu e-mail"
                     />
                     <Input
