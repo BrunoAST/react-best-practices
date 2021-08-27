@@ -1,17 +1,56 @@
+@import "src/theme/styles/colors";
+
+@mixin label-active {
+    transform: translateY(-8px);
+    font-size: 12px;
+}
+
 .inputWrap {
-    margin-top: 16px;
-    display: flex;
+    border: 1px solid $disabledBackground;
+    border-radius: 10px;
+    margin: 12px 0;
     position: relative;
-    align-items: center;
+    padding: 0 8px;
+
+    &:focus-within {
+        border-color: $primaryLight;
+
+        label {
+            @include label-active;
+            color: $primaryLight;
+        }
+    }
 
     input {
-        flex-grow: 1;
+        width: 100%;
+        height: 50px;
+        padding: 0 40px 0 8px;
+
+        // It means that our input has some value,
+        // thus the placeholder become invisible and the label hold the active position
+        &:not(:placeholder-shown) + label {
+            @include label-active;
+        }
+    }
+
+    label {
+        position: absolute;
+        background-color: $white;
+        left: 0;
+        color: $disabledColor;
+        cursor: text;
+        margin: 0 15px;
+        pointer-events: none;
+        padding: 0 5px;
+        transform: translateY(16px);
+        transition: all 200ms ease;
     }
 
     .status {
         position: absolute;
-        right: 8px;
-        font-size: 12px;
+        right: 15px;
+        top: 16px;
+        font-size: 10px;
         cursor: help;
     }
 }

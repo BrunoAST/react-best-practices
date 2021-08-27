@@ -26,11 +26,15 @@ const Input: React.FC<Props> = (props: Props) => {
     return (
         <div className={Styles.inputWrap}>
             <input
+                {...props}
                 data-testid={props.name}
                 autoComplete="off"
-                {...props}
+                placeholder=" "
                 onChange={handleChange}
             />
+            <label>
+                {props.placeholder}
+            </label>
             <span
                 data-testid={`${props.name}-status`}
                 title={getTitle()}
