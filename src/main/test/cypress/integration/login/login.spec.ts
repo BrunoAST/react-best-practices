@@ -23,7 +23,7 @@ const makeSut = (params?: SutParams) => {
         url: /login/,
         status: params?.status,
         response: params?.response,
-    });
+    }).as("request");
 }
 
 beforeEach(() => {
@@ -137,5 +137,18 @@ describe("Login", () => {
         cy.getByTestId("spinner").should("not.exist");
         cy.url().should("eq", `${baseUrl}/`);
         cy.window().then(window => assert.isOk(window.localStorage.getItem("accessToken")));
+    });
+
+    it("Should prevent multiple submits", () => {
+        makeSut({
+            status: 200,
+            response: {
+                accessToken: faker.datatype.uuid(),
+            },
+        });
+        cy.getByTestId(DATA_TEST_IDS.emailField).type(faker.internet.email());
+        cy.getByTestId(DATA_TEST_IDS.passwordField).type(faker.internet.password());
+        cy.getByTestId(DATA_TEST_IDS.submitButton).dblclick();
+        cy.get("@request.all").should("have.length", 1);
     });
 });
