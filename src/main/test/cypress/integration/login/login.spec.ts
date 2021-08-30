@@ -1,16 +1,10 @@
 /// <reference types="cypress" />
 
 import faker from "faker";
+import {LOGIN_SELECTORS} from "../../support/selectors/login-selector";
+import {login_fillCorrectEmailAndPassword} from "./login-fields";
 
 const baseUrl = Cypress.config().baseUrl;
-
-const DATA_TEST_IDS = {
-    emailStatus: "email-status",
-    emailField: "email",
-    passwordStatus: "password-status",
-    passwordField: "password",
-    submitButton: "submit-button",
-}
 
 type SutParams = {
     status: number;
@@ -33,42 +27,41 @@ beforeEach(() => {
 
 describe("Login", () => {
     it("Should initialize with email field focused", () => {
-        cy.getByTestId(DATA_TEST_IDS.emailStatus).focused();
+        cy.getByTestId(LOGIN_SELECTORS.emailStatus).focused();
     });
 
     it("Should load with correct initial state", () => {
-        cy.containsErrorStatus(DATA_TEST_IDS.emailStatus);
-        cy.containsAttrTitleMessage(DATA_TEST_IDS.emailStatus, "Campo obrigatório");
-        cy.containsErrorStatus(DATA_TEST_IDS.passwordStatus);
-        cy.containsAttrTitleMessage(DATA_TEST_IDS.passwordStatus, "Campo obrigatório");
-        cy.isDisabled(DATA_TEST_IDS.submitButton);
+        cy.containsErrorStatus(LOGIN_SELECTORS.emailStatus);
+        cy.containsAttrTitleMessage(LOGIN_SELECTORS.emailStatus, "Campo obrigatório");
+        cy.containsErrorStatus(LOGIN_SELECTORS.passwordStatus);
+        cy.containsAttrTitleMessage(LOGIN_SELECTORS.passwordStatus, "Campo obrigatório");
+        cy.isDisabled(LOGIN_SELECTORS.submitButton);
         cy.getByTestId("error-wrap").should("not.have.descendants");
     });
 
     it("Should present error if email field is invalid", () => {
-        cy.getByTestId(DATA_TEST_IDS.emailField).type(faker.random.words(5));
-        cy.containsErrorStatus(DATA_TEST_IDS.emailStatus);
-        cy.containsAttrTitleMessage(DATA_TEST_IDS.emailStatus, "Email inválido");
-        cy.isDisabled(DATA_TEST_IDS.submitButton);
+        cy.getByTestId(LOGIN_SELECTORS.emailField).type(faker.random.words(5));
+        cy.containsErrorStatus(LOGIN_SELECTORS.emailStatus);
+        cy.containsAttrTitleMessage(LOGIN_SELECTORS.emailStatus, "Email inválido");
+        cy.isDisabled(LOGIN_SELECTORS.submitButton);
         cy.getByTestId("error-wrap").should("not.have.descendants");
     });
 
     it("Should present error if password field is invalid", () => {
-        cy.getByTestId(DATA_TEST_IDS.passwordField).type(faker.datatype.string(4));
-        cy.containsErrorStatus(DATA_TEST_IDS.passwordStatus);
-        cy.containsAttrTitleMessage(DATA_TEST_IDS.passwordStatus, "Mínimo de 5 caracteres");
-        cy.isDisabled(DATA_TEST_IDS.submitButton);
+        cy.getByTestId(LOGIN_SELECTORS.passwordField).type(faker.datatype.string(4));
+        cy.containsErrorStatus(LOGIN_SELECTORS.passwordStatus);
+        cy.containsAttrTitleMessage(LOGIN_SELECTORS.passwordStatus, "Mínimo de 5 caracteres");
+        cy.isDisabled(LOGIN_SELECTORS.submitButton);
         cy.getByTestId("error-wrap").should("not.have.descendants");
     });
 
     it("Should present valid state if all fields are valid", () => {
-        cy.getByTestId(DATA_TEST_IDS.emailField).type(faker.internet.email());
-        cy.getByTestId(DATA_TEST_IDS.passwordField).type(faker.internet.password());
-        cy.containsSuccessStatus(DATA_TEST_IDS.emailStatus);
-        cy.containsSuccessStatus(DATA_TEST_IDS.passwordStatus);
-        cy.containsAttrTitleMessage(DATA_TEST_IDS.emailStatus, "Tudo certo");
-        cy.containsAttrTitleMessage(DATA_TEST_IDS.passwordStatus, "Tudo certo");
-        cy.isEnabled(DATA_TEST_IDS.submitButton);
+        login_fillCorrectEmailAndPassword();
+        cy.containsSuccessStatus(LOGIN_SELECTORS.emailStatus);
+        cy.containsSuccessStatus(LOGIN_SELECTORS.passwordStatus);
+        cy.containsAttrTitleMessage(LOGIN_SELECTORS.emailStatus, "Tudo certo");
+        cy.containsAttrTitleMessage(LOGIN_SELECTORS.passwordStatus, "Tudo certo");
+        cy.isEnabled(LOGIN_SELECTORS.submitButton);
         cy.getByTestId("error-wrap").should("not.have.descendants");
     });
 
@@ -79,9 +72,8 @@ describe("Login", () => {
                 error: faker.random.words(),
             },
         });
-        cy.getByTestId(DATA_TEST_IDS.emailField).type(faker.internet.email());
-        cy.getByTestId(DATA_TEST_IDS.passwordField).type(faker.internet.password());
-        cy.getByTestId(DATA_TEST_IDS.submitButton).click();
+        login_fillCorrectEmailAndPassword();
+        cy.getByTestId(LOGIN_SELECTORS.submitButton).click();
         cy.getByTestId("spinner").should("not.exist");
         cy.getByTestId("main-error").should("have.text", "Credenciais inválidas");
         cy.url().should("eq", `${baseUrl}/login`);
@@ -94,9 +86,8 @@ describe("Login", () => {
                 error: faker.random.words(),
             },
         });
-        cy.getByTestId(DATA_TEST_IDS.emailField).type(faker.internet.email());
-        cy.getByTestId(DATA_TEST_IDS.passwordField).type(faker.internet.password());
-        cy.getByTestId(DATA_TEST_IDS.submitButton).click();
+        login_fillCorrectEmailAndPassword();
+        cy.getByTestId(LOGIN_SELECTORS.submitButton).click();
         cy.getByTestId("spinner").should("not.exist");
         cy.getByTestId("main-error").should(
             "have.text",
@@ -112,9 +103,8 @@ describe("Login", () => {
                 invalidProperty: faker.random.words(),
             },
         });
-        cy.getByTestId(DATA_TEST_IDS.emailField).type(faker.internet.email());
-        cy.getByTestId(DATA_TEST_IDS.passwordField).type(faker.internet.password());
-        cy.getByTestId(DATA_TEST_IDS.submitButton).click();
+        login_fillCorrectEmailAndPassword();
+        cy.getByTestId(LOGIN_SELECTORS.submitButton).click();
         cy.getByTestId("spinner").should("not.exist");
         cy.getByTestId("main-error").should(
             "have.text",
@@ -130,9 +120,8 @@ describe("Login", () => {
                 accessToken: faker.datatype.uuid(),
             },
         });
-        cy.getByTestId(DATA_TEST_IDS.emailField).type(faker.internet.email());
-        cy.getByTestId(DATA_TEST_IDS.passwordField).type(faker.internet.password());
-        cy.getByTestId(DATA_TEST_IDS.submitButton).click();
+        login_fillCorrectEmailAndPassword();
+        cy.getByTestId(LOGIN_SELECTORS.submitButton).click();
         cy.getByTestId("main-error").should("not.exist");
         cy.getByTestId("spinner").should("not.exist");
         cy.url().should("eq", `${baseUrl}/`);
@@ -146,9 +135,8 @@ describe("Login", () => {
                 accessToken: faker.datatype.uuid(),
             },
         });
-        cy.getByTestId(DATA_TEST_IDS.emailField).type(faker.internet.email());
-        cy.getByTestId(DATA_TEST_IDS.passwordField).type(faker.internet.password());
-        cy.getByTestId(DATA_TEST_IDS.submitButton).dblclick();
+        login_fillCorrectEmailAndPassword();
+        cy.getByTestId(LOGIN_SELECTORS.submitButton).dblclick();
         cy.get("@request.all").should("have.length", 1);
     });
 });
