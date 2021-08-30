@@ -1,4 +1,5 @@
 {
+  "projectId": "m3bqqw",
   "baseUrl": "http://localhost:8080",
   "supportFile": "src/main/test/cypress/support/index.js",
   "pluginsFile": "src/main/test/cypress/plugins/index.js",
