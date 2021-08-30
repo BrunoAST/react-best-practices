@@ -5,5 +5,9 @@ import faker from "faker";
 
 export const login_fillCorrectEmailAndPassword = () => {
     cy.getByTestId(LOGIN_SELECTORS.emailField).type(faker.internet.email());
-    cy.getByTestId(LOGIN_SELECTORS.passwordField).type(faker.internet.password()).type("{enter}");
+    cy.getByTestId(LOGIN_SELECTORS.passwordField).type(faker.internet.password());
+}
+
+export const login_fillEmail = () => {
+    cy.getByTestId(LOGIN_SELECTORS.passwordField).type(faker.internet.email()).type("{enter}");
 }

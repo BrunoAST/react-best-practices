@@ -2,7 +2,7 @@
 
 import faker from "faker";
 import {LOGIN_SELECTORS} from "../../support/selectors/login-selector";
-import {login_fillCorrectEmailAndPassword} from "./login-fields";
+import {login_fillCorrectEmailAndPassword, login_fillEmail} from "./login-fields";
 
 const baseUrl = Cypress.config().baseUrl;
 
@@ -138,5 +138,16 @@ describe("Login", () => {
         login_fillCorrectEmailAndPassword();
         cy.getByTestId(LOGIN_SELECTORS.submitButton).dblclick();
         cy.get("@request.all").should("have.length", 1);
+    });
+
+    it("Should not call submit if form is invalid", () => {
+        makeSut({
+            status: 200,
+            response: {
+                accessToken: faker.datatype.uuid(),
+            },
+        });
+        login_fillEmail();
+        cy.get("@request.all").should("have.length", 0);
     });
 });
