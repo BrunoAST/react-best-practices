@@ -1,10 +1,13 @@
 import {fireEvent, RenderResult} from "@testing-library/react";
 import faker from "faker";
 
-export const testStatusForField = (sut: RenderResult, fieldName: string, validationError?: string): void => {
-    const fieldStatus = sut.getByTestId(`${fieldName}-status`);
-    expect(fieldStatus.title).toBe(validationError || "Tudo certo");
-    expect(fieldStatus.textContent).toBe(validationError ? "🔴" : "🟢");
+export const testStatusForField = (sut: RenderResult, fieldName: string, validationError: string = ""): void => {
+    const wrap = sut.getByTestId(`${fieldName}-wrap`);
+    const field = sut.getByTestId(fieldName);
+    const label = sut.getByTestId(`${fieldName}-label`);
+    expect(wrap.getAttribute("data-status")).toBe(validationError ? "invalid" : "valid");
+    expect(field.title).toBe(validationError);
+    expect(label.title).toBe(validationError);
 }
 
 export const testChildCount = (sut: RenderResult, fieldName: string, count: number): void => {

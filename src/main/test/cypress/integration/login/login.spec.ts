@@ -1,23 +1,30 @@
 /// <reference types="cypress" />
 
 import faker from "faker";
-import {LOGIN_SELECTORS} from "../../support/selectors/login-selector";
-import {login_fillCorrectEmailAndPassword, login_fillEmail} from "./login-fields";
+import {isWrapInvalid} from "../../support/assertions/input";
+import {
+    clickSubmitButton,
+    doubleClickSubmitButton,
+    isSubmitButtonEnabled
+} from "../../support/assertions/submit-button";
+import {
+    shouldMainErrorHaveText,
+    shouldNotExistMainErrorWrap,
+    shouldNotHaveDescendants
+} from "../../support/assertions/form-status";
+import {urlEquals} from "../../support/assertions/url";
 
-const baseUrl = Cypress.config().baseUrl;
-
-type SutParams = {
-    status: number;
-    response: object;
+const makeRoute = (status: number, response: object) => {
+    cy.route({method: "POST", url: /login/, status, response}).as("request");
 }
 
-const makeSut = (params?: SutParams) => {
-    cy.route({
-        method: "POST",
-        url: /login/,
-        status: params?.status,
-        response: params?.response,
-    }).as("request");
+const fillCorrectEmailAndPassword = () => {
+    cy.get(`[data-testid=email]`).type(faker.internet.email());
+    cy.get(`[data-testid=password]`).type(faker.internet.password());
+}
+
+const fillEmail = () => {
+    cy.get(`[data-testid=password]`).type(faker.internet.email()).type("{enter}");
 }
 
 beforeEach(() => {
@@ -27,127 +34,85 @@ beforeEach(() => {
 
 describe("Login", () => {
     it("Should initialize with email field focused", () => {
-        cy.getByTestId(LOGIN_SELECTORS.emailStatus).focused();
+        cy.get(`[data-testid=email-label]`).focused();
     });
 
     it("Should load with correct initial state", () => {
-        cy.containsErrorStatus(LOGIN_SELECTORS.emailStatus);
-        cy.containsAttrTitleMessage(LOGIN_SELECTORS.emailStatus, "Campo obrigatório");
-        cy.containsErrorStatus(LOGIN_SELECTORS.passwordStatus);
-        cy.containsAttrTitleMessage(LOGIN_SELECTORS.passwordStatus, "Campo obrigatório");
-        cy.isDisabled(LOGIN_SELECTORS.submitButton);
-        cy.getByTestId("error-wrap").should("not.have.descendants");
+        isWrapInvalid("email-wrap");
+        cy.get(`[data-testid=email-label]`).should("have.attr", "title", "Campo obrigatório");
+        cy.get(`[data-testid=password-wrap]`).should("have.attr", "data-status", "invalid");
+        cy.get(`[data-testid=password-label]`).should("have.attr", "title", "Campo obrigatório");
+        cy.get(`[data-testid=submit-button]`).should("be.disabled");
+        shouldNotHaveDescendants();
     });
 
     it("Should present error if email field is invalid", () => {
-        cy.getByTestId(LOGIN_SELECTORS.emailField).type(faker.random.words(5));
-        cy.containsErrorStatus(LOGIN_SELECTORS.emailStatus);
-        cy.containsAttrTitleMessage(LOGIN_SELECTORS.emailStatus, "Email inválido");
-        cy.isDisabled(LOGIN_SELECTORS.submitButton);
-        cy.getByTestId("error-wrap").should("not.have.descendants");
+        cy.get(`[data-testid=email]`).type(faker.random.words(5));
+        isWrapInvalid("email-wrap");
+        cy.get(`[data-testid=email-label]`).should("have.attr", "title", "Email inválido");
+        isSubmitButtonEnabled(false);
+        shouldNotHaveDescendants();
     });
 
     it("Should present error if password field is invalid", () => {
-        cy.getByTestId(LOGIN_SELECTORS.passwordField).type(faker.datatype.string(4));
-        cy.containsErrorStatus(LOGIN_SELECTORS.passwordStatus);
-        cy.containsAttrTitleMessage(LOGIN_SELECTORS.passwordStatus, "Mínimo de 5 caracteres");
-        cy.isDisabled(LOGIN_SELECTORS.submitButton);
-        cy.getByTestId("error-wrap").should("not.have.descendants");
+        cy.get(`[data-testid=password]`).type(faker.datatype.string(4));
+        isWrapInvalid("password-wrap");
+        cy.get(`[data-testid=password-label]`).should("have.attr", "title", "Mínimo de 5 caracteres");
+        isSubmitButtonEnabled(false);
+        shouldNotHaveDescendants();
     });
 
     it("Should present valid state if all fields are valid", () => {
-        login_fillCorrectEmailAndPassword();
-        cy.containsSuccessStatus(LOGIN_SELECTORS.emailStatus);
-        cy.containsSuccessStatus(LOGIN_SELECTORS.passwordStatus);
-        cy.containsAttrTitleMessage(LOGIN_SELECTORS.emailStatus, "Tudo certo");
-        cy.containsAttrTitleMessage(LOGIN_SELECTORS.passwordStatus, "Tudo certo");
-        cy.isEnabled(LOGIN_SELECTORS.submitButton);
-        cy.getByTestId("error-wrap").should("not.have.descendants");
+        fillCorrectEmailAndPassword();
+        cy.get(`[data-testid=email-wrap]`).should("have.attr", "data-status", "valid");
+        cy.get(`[data-testid=password-wrap]`).should("have.attr", "data-status", "valid");
+        isSubmitButtonEnabled();
+        shouldNotHaveDescendants();
     });
 
     it("Should present invalid credentials error on 401", () => {
-        makeSut({
-            status: 401,
-            response: {
-                error: faker.random.words(),
-            },
-        });
-        login_fillCorrectEmailAndPassword();
-        cy.getByTestId(LOGIN_SELECTORS.submitButton).click();
-        cy.getByTestId("spinner").should("not.exist");
-        cy.getByTestId("main-error").should("have.text", "Credenciais inválidas");
-        cy.url().should("eq", `${baseUrl}/login`);
+        makeRoute(401, {error: faker.random.words()});
+        fillCorrectEmailAndPassword();
+        clickSubmitButton();
+        shouldMainErrorHaveText("Credenciais inválidas");
+        urlEquals("login");
     });
 
     it("Should present unexpected error on 400", () => {
-        makeSut({
-            status: 400,
-            response: {
-                error: faker.random.words(),
-            },
-        });
-        login_fillCorrectEmailAndPassword();
-        cy.getByTestId(LOGIN_SELECTORS.submitButton).click();
-        cy.getByTestId("spinner").should("not.exist");
-        cy.getByTestId("main-error").should(
-            "have.text",
-            "Algo de errado aconteceu. Tente novamente em breve"
-        );
-        cy.url().should("eq", `${baseUrl}/login`);
+        makeRoute(400, {error: faker.random.words()});
+        fillCorrectEmailAndPassword();
+        clickSubmitButton();
+        shouldMainErrorHaveText("Algo de errado aconteceu. Tente novamente em breve");
+        urlEquals("login");
     });
 
     it("Should present unexpected error if invalid data is returned", () => {
-        makeSut({
-            status: 200,
-            response: {
-                invalidProperty: faker.random.words(),
-            },
-        });
-        login_fillCorrectEmailAndPassword();
-        cy.getByTestId(LOGIN_SELECTORS.submitButton).click();
-        cy.getByTestId("spinner").should("not.exist");
-        cy.getByTestId("main-error").should(
-            "have.text",
-            "Algo de errado aconteceu. Tente novamente em breve"
-        );
-        cy.url().should("eq", `${baseUrl}/login`);
+        makeRoute(200, {invalidProperty: faker.random.words()});
+        fillCorrectEmailAndPassword();
+        clickSubmitButton();
+        shouldMainErrorHaveText("Algo de errado aconteceu. Tente novamente em breve");
+        urlEquals("login");
     });
 
     it("Should present save access token if valid credentials provided", () => {
-        makeSut({
-            status: 200,
-            response: {
-                accessToken: faker.datatype.uuid(),
-            },
-        });
-        login_fillCorrectEmailAndPassword();
-        cy.getByTestId(LOGIN_SELECTORS.submitButton).click();
-        cy.getByTestId("main-error").should("not.exist");
-        cy.getByTestId("spinner").should("not.exist");
-        cy.url().should("eq", `${baseUrl}/`);
+        makeRoute(200, {accessToken: faker.datatype.uuid()});
+        fillCorrectEmailAndPassword();
+        clickSubmitButton();
+        shouldNotExistMainErrorWrap();
+        urlEquals("");
         cy.window().then(window => assert.isOk(window.localStorage.getItem("accessToken")));
     });
 
     it("Should prevent multiple submits", () => {
-        makeSut({
-            status: 200,
-            response: {
-                accessToken: faker.datatype.uuid(),
-            },
-        });
-        login_fillCorrectEmailAndPassword();
-        cy.getByTestId(LOGIN_SELECTORS.submitButton).dblclick();
+        makeRoute(200, {accessToken: faker.datatype.uuid()});
+        fillCorrectEmailAndPassword();
+        doubleClickSubmitButton();
         cy.get("@request.all").should("have.length", 1);
     });
 
     it("Should not call submit if form is invalid", () => {
-        makeSut({
-            status: 200,
-            response: {
-                accessToken: faker.datatype.uuid(),
-            },
-        });
-        login_fillEmail();
+        makeRoute(200, {accessToken: faker.datatype.uuid()});
+        fillEmail();
         cy.get("@request.all").should("have.length", 0);
     });
 });

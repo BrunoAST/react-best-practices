@@ -8,14 +8,6 @@ const Input: React.FC<Props> = (props: Props) => {
     const {state, setState} = useContext(Context);
     const error = state[`${props.name}Error`];
 
-    const getStatus = (): string => {
-        return error ? "🔴" : "🟢";
-    }
-
-    const getTitle = (): string => {
-        return error || "Tudo certo";
-    }
-
     const handleChange = (event: React.FocusEvent<HTMLInputElement>): void => {
         setState({
             ...state,
@@ -24,24 +16,22 @@ const Input: React.FC<Props> = (props: Props) => {
     }
 
     return (
-        <div className={Styles.inputWrap}>
+        <div
+            className={Styles.inputWrap}
+            data-testid={`${props.name}-wrap`}
+            data-status={error ? "invalid" : "valid"}
+        >
             <input
                 {...props}
+                title={error}
                 data-testid={props.name}
                 autoComplete="off"
                 placeholder=" "
                 onChange={handleChange}
             />
-            <label>
+            <label data-testid={`${props.name}-label`} title={error}>
                 {props.placeholder}
             </label>
-            <span
-                data-testid={`${props.name}-status`}
-                title={getTitle()}
-                className={Styles.status}
-            >
-                {getStatus()}
-            </span>
         </div>
     );
 }

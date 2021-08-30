@@ -12,6 +12,22 @@
     position: relative;
     padding: 0 8px;
 
+    &[data-status=valid] {
+        border-color: $valid;
+
+        label {
+            color: $valid;
+        }
+    }
+
+    &[data-status=invalid] {
+        border-color: $invalid;
+
+        label {
+            color: $invalid;
+        }
+    }
+
     &:focus-within {
         border-color: $primaryLight;
 
@@ -44,13 +60,5 @@
         padding: 0 5px;
         transform: translateY(16px);
         transition: all 200ms ease;
-    }
-
-    .status {
-        position: absolute;
-        right: 15px;
-        top: 16px;
-        font-size: 10px;
-        cursor: help;
     }
 }
