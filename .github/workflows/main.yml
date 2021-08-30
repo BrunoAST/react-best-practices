@@ -3,7 +3,8 @@ name: CI
 on:
   push:
     branches: 
-      - master
+      - "*"
+      - "*"
     
 jobs:
   test:
@@ -30,3 +31,19 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           flag-name: Unit
+
+  cypress-run:
+    runs-on: ubuntu-latest
+    container: cypress/browsers:node12.18.3-chrome87-ff82
+    
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Cypress run
+        uses: cypress-io/github-action@v2
+        with:
+          build: npm run build
+          start: npm start
+          browser: firefox
+  
