@@ -12,8 +12,23 @@ const DATA_TEST_IDS = {
     submitButton: "submit-button",
 }
 
+type SutParams = {
+    status: number;
+    response: object;
+}
+
+const makeSut = (params?: SutParams) => {
+    cy.route({
+        method: "POST",
+        url: /login/,
+        status: params?.status,
+        response: params?.response,
+    });
+}
+
 beforeEach(() => {
     cy.visit("login");
+    cy.server();
 });
 
 describe("Login", () => {
@@ -57,27 +72,69 @@ describe("Login", () => {
         cy.getByTestId("error-wrap").should("not.have.descendants");
     });
 
-    it("Should present error if invalid credentials provided", () => {
+    it("Should present invalid credentials error on 401", () => {
+        makeSut({
+            status: 401,
+            response: {
+                error: faker.random.words(),
+            },
+        });
         cy.getByTestId(DATA_TEST_IDS.emailField).type(faker.internet.email());
         cy.getByTestId(DATA_TEST_IDS.passwordField).type(faker.internet.password());
         cy.getByTestId(DATA_TEST_IDS.submitButton).click();
-        cy.getByTestId("error-wrap")
-            .getByTestId("spinner").should("exist")
-            .getByTestId("main-error").should("not.exist")
-            .getByTestId("error-wrap")
-            .getByTestId("spinner").should("not.exist")
-            .getByTestId("main-error").should("have.text", "Credenciais inválidas");
+        cy.getByTestId("spinner").should("not.exist");
+        cy.getByTestId("main-error").should("have.text", "Credenciais inválidas");
+        cy.url().should("eq", `${baseUrl}/login`);
+    });
+
+    it("Should present unexpected error on 400", () => {
+        makeSut({
+            status: 400,
+            response: {
+                error: faker.random.words(),
+            },
+        });
+        cy.getByTestId(DATA_TEST_IDS.emailField).type(faker.internet.email());
+        cy.getByTestId(DATA_TEST_IDS.passwordField).type(faker.internet.password());
+        cy.getByTestId(DATA_TEST_IDS.submitButton).click();
+        cy.getByTestId("spinner").should("not.exist");
+        cy.getByTestId("main-error").should(
+            "have.text",
+            "Algo de errado aconteceu. Tente novamente em breve"
+        );
+        cy.url().should("eq", `${baseUrl}/login`);
+    });
+
+    it("Should present unexpected error if invalid data is returned", () => {
+        makeSut({
+            status: 200,
+            response: {
+                invalidProperty: faker.random.words(),
+            },
+        });
+        cy.getByTestId(DATA_TEST_IDS.emailField).type(faker.internet.email());
+        cy.getByTestId(DATA_TEST_IDS.passwordField).type(faker.internet.password());
+        cy.getByTestId(DATA_TEST_IDS.submitButton).click();
+        cy.getByTestId("spinner").should("not.exist");
+        cy.getByTestId("main-error").should(
+            "have.text",
+            "Algo de errado aconteceu. Tente novamente em breve"
+        );
+        cy.url().should("eq", `${baseUrl}/login`);
     });
 
     it("Should present save access token if valid credentials provided", () => {
-        cy.getByTestId(DATA_TEST_IDS.emailField).type("mango@gmail.com");
-        cy.getByTestId(DATA_TEST_IDS.passwordField).type("12345");
+        makeSut({
+            status: 200,
+            response: {
+                accessToken: faker.datatype.uuid(),
+            },
+        });
+        cy.getByTestId(DATA_TEST_IDS.emailField).type(faker.internet.email());
+        cy.getByTestId(DATA_TEST_IDS.passwordField).type(faker.internet.password());
         cy.getByTestId(DATA_TEST_IDS.submitButton).click();
-        cy.getByTestId("error-wrap")
-            .getByTestId("spinner").should("exist")
-            .getByTestId("main-error").should("not.exist")
-            .getByTestId("error-wrap")
-            .getByTestId("spinner").should("not.exist");
+        cy.getByTestId("main-error").should("not.exist");
+        cy.getByTestId("spinner").should("not.exist");
         cy.url().should("eq", `${baseUrl}/`);
         cy.window().then(window => assert.isOk(window.localStorage.getItem("accessToken")));
     });
