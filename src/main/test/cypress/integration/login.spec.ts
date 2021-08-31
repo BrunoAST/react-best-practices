@@ -1,13 +1,13 @@
 /// <reference types="cypress" />
 
 import faker from "faker";
-import {isWrapInvalid} from "../../support/assertions/input";
-import * as SubmitButtonAssertions from "../../support/assertions/submit-button";
-import * as FormStatusAssertions from "../../support/assertions/form-status";
-import {urlEquals} from "../../support/assertions/url";
-import {mockInvalidCredentialsError, mockInvalidData, mockOk, mockUnexpectedError} from "../../support/mocks/login-mocks";
-import {testLocalStorageItem} from "../../support/assertions/local-storage";
-import {clickSubmitButton} from "../../support/assertions/submit-button";
+import {isWrapInvalid} from "../support/assertions/input";
+import * as SubmitButtonAssertions from "../support/assertions/submit-button";
+import * as FormStatusAssertions from "../support/assertions/form-status";
+import {urlEquals} from "../support/assertions/url";
+import {mockInvalidCredentialsError, mockInvalidData, mockOk, mockUnexpectedError} from "../support/mocks/login-mocks";
+import {testLocalStorageItem} from "../support/assertions/local-storage";
+import {clickSubmitButton} from "../support/assertions/submit-button";
 
 const fillCorrectEmailAndPassword = () => {
     cy.get(`[data-testid=email]`).type(faker.internet.email());
