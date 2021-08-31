@@ -1,14 +1,16 @@
 /// <reference types="cypress" />
 
+import {getByTestId} from "../selectors/data-type-selector";
+
 export const isSubmitButtonEnabled = (enabled = true): void => {
-    cy.get(`[data-testid=submit-button]`).should(enabled ? "be.enabled" : "be.disabled");
+    getByTestId("submit-button").should(enabled ? "be.enabled" : "be.disabled");
 }
 
 export const clickSubmitButton = (): void => {
-    cy.get(`[data-testid=submit-button]`).click();
-    cy.get(`[data-testid=spinner]`).should("not.exist");
+    getByTestId("submit-button").click();
+    getByTestId("spinner").should("not.exist");
 }
 
 export const doubleClickSubmitButton = (): void => {
-    cy.get(`[data-testid=submit-button]`).dblclick();
+    getByTestId("submit-button").dblclick();
 }

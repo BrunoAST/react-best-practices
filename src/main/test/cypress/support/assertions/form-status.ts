@@ -1,13 +1,15 @@
 /// <reference types="cypress" />
 
+import {getByTestId} from "../selectors/data-type-selector";
+
 export const shouldNotHaveDescendants = (): void => {
-    cy.get(`[data-testid=error-wrap]`).should("not.have.descendants");
+    getByTestId("error-wrap").should("not.have.descendants");
 }
 
 export const shouldNotExistMainErrorWrap = (): void => {
-    cy.get(`[data-testid=main-error]`).should("not.exist");
+    getByTestId("main-error").should("not.exist");
 }
 
 export const shouldMainErrorHaveText = (text: string): void => {
-    cy.get(`[data-testid=main-error]`).should("have.text", text);
+    getByTestId("main-error").should("have.text", text);
 }
