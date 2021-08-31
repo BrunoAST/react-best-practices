@@ -7,7 +7,7 @@ import * as FormStatusAssertions from "../support/assertions/form-status";
 import {urlEquals} from "../support/assertions/url";
 import {mockInvalidCredentialsError, mockInvalidData, mockOk, mockUnexpectedError} from "../support/mocks/login-mocks";
 import {testLocalStorageItem} from "../support/assertions/local-storage";
-import {clickSubmitButton, isSubmitButtonEnabled} from "../support/assertions/submit-button";
+import {isSubmitButtonEnabled} from "../support/assertions/submit-button";
 import {getByTestId} from "../support/selectors/data-type-selector";
 
 const fillCorrectEmailAndPassword = () => {
@@ -30,9 +30,9 @@ describe("Login", () => {
     });
 
     it("Should load with correct initial state", () => {
-        isWrapInvalid("email-wrap");
+        isWrapInvalid("email");
         getByTestId("email-label").should("have.attr", "title", "Campo obrigatório");
-        isWrapInvalid("password-wrap");
+        isWrapInvalid("password");
         getByTestId("password-label").should("have.attr", "title", "Campo obrigatório");
         isSubmitButtonEnabled(false);
         FormStatusAssertions.shouldNotHaveDescendants();
@@ -40,7 +40,7 @@ describe("Login", () => {
 
     it("Should present error if email field is invalid", () => {
         getByTestId("email").type(faker.random.words(5));
-        isWrapInvalid("email-wrap");
+        isWrapInvalid("email");
         getByTestId("email-label").should("have.attr", "title", "Email inválido");
         SubmitButtonAssertions.isSubmitButtonEnabled(false);
         FormStatusAssertions.shouldNotHaveDescendants();
@@ -48,7 +48,7 @@ describe("Login", () => {
 
     it("Should present error if password field is invalid", () => {
         getByTestId("password").type(faker.datatype.string(4));
-        isWrapInvalid("password-wrap");
+        isWrapInvalid("password");
         getByTestId("password-label").should("have.attr", "title", "Mínimo de 5 caracteres");
         SubmitButtonAssertions.isSubmitButtonEnabled(false);
         FormStatusAssertions.shouldNotHaveDescendants();
@@ -57,8 +57,8 @@ describe("Login", () => {
     it("Should present valid state if all fields are valid", () => {
         fillCorrectEmailAndPassword();
         SubmitButtonAssertions.clickSubmitButton();
-        isWrapInvalid("email-wrap", true);
-        isWrapInvalid("password-wrap", true);
+        isWrapInvalid("email", true);
+        isWrapInvalid("password", true);
         SubmitButtonAssertions.isSubmitButtonEnabled();
         FormStatusAssertions.shouldNotHaveDescendants();
     });
