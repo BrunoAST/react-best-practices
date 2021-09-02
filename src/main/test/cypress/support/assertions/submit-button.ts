@@ -8,7 +8,7 @@ export const isSubmitButtonEnabled = (enabled = true): void => {
 
 export const clickSubmitButton = (): void => {
     getByTestId("submit-button").click();
-    getByTestId("spinner").should("not.exist");
+    // getByTestId("spinner").should("not.exist");
 }
 
 export const doubleClickSubmitButton = (): void => {
