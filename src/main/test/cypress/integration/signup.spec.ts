@@ -7,7 +7,7 @@ import * as SubmitButtonAssertions from "../support/assertions/submit-button";
 import {getByTestId} from "../support/selectors/data-type-selector";
 import {isSubmitButtonEnabled} from "../support/assertions/submit-button";
 import {urlEquals} from "../support/assertions/url";
-import {mockInvalidCredentialsError} from "../support/mocks/sinup-mocks";
+import {mockEmailInUse, mockUnexpectedError} from "../support/mocks/sinup-mocks";
 
 const fillAllFields = () => {
     const password = faker.internet.password();
@@ -83,11 +83,19 @@ describe("Sign up", () => {
         FormStatusAssertions.shouldNotHaveDescendants();
     });
 
-    it("Should present invalid credentials error on 401", () => {
-        mockInvalidCredentialsError();
+    it("Should present EmailInUse error on 403", () => {
+        mockEmailInUse();
         fillAllFields();
         SubmitButtonAssertions.clickSubmitButton();
-        FormStatusAssertions.shouldMainErrorHaveText("Credenciais inválidas");
+        FormStatusAssertions.shouldMainErrorHaveText("Esse email já está em uso");
+        urlEquals("signup");
+    });
+
+    it("Should present unexpected error on 400", () => {
+        mockUnexpectedError();
+        fillAllFields();
+        SubmitButtonAssertions.clickSubmitButton();
+        FormStatusAssertions.shouldMainErrorHaveText("Algo de errado aconteceu. Tente novamente em breve");
         urlEquals("signup");
     });
 });
