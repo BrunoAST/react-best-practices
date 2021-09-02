@@ -7,8 +7,7 @@ import * as SubmitButtonAssertions from "../support/assertions/submit-button";
 import {getByTestId} from "../support/selectors/data-type-selector";
 import {isSubmitButtonEnabled} from "../support/assertions/submit-button";
 import {urlEquals} from "../support/assertions/url";
-import {mockEmailInUse, mockInvalidCredentialsError, mockUnexpectedError} from "../support/mocks/sinup-mocks";
-import {mockInvalidData} from "../support/mocks/login-mocks";
+import {mockEmailInUse, mockUnexpectedError, mockInvalidData} from "../support/mocks/sinup-mocks";
 
 const fillAllFields = () => {
     const password = faker.internet.password();
@@ -92,8 +91,16 @@ describe("Sign up", () => {
         urlEquals("signup");
     });
 
+    it("Should present unexpected error if invalid data is returned", () => {
+        mockInvalidData();
+        fillAllFields();
+        SubmitButtonAssertions.clickSubmitButton();
+        FormStatusAssertions.shouldMainErrorHaveText("Algo de errado aconteceu. Tente novamente em breve");
+        urlEquals("signup");
+    });
+
     it("Should present unexpected error on default error cases", () => {
-        mockInvalidCredentialsError();
+        mockUnexpectedError();
         fillAllFields();
         SubmitButtonAssertions.clickSubmitButton();
         FormStatusAssertions.shouldMainErrorHaveText("Algo de errado aconteceu. Tente novamente em breve");
