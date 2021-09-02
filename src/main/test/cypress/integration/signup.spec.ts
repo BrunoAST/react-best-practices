@@ -7,7 +7,7 @@ import * as SubmitButtonAssertions from "../support/assertions/submit-button";
 import {getByTestId} from "../support/selectors/data-type-selector";
 import {isSubmitButtonEnabled} from "../support/assertions/submit-button";
 import {urlEquals} from "../support/assertions/url";
-import {mockEmailInUse, mockUnexpectedError, mockInvalidData} from "../support/mocks/sinup-mocks";
+import {mockEmailInUse, mockUnexpectedError, mockInvalidData, mockOk} from "../support/mocks/sinup-mocks";
 
 const fillAllFields = () => {
     const password = faker.internet.password();
@@ -105,5 +105,12 @@ describe("Sign up", () => {
         SubmitButtonAssertions.clickSubmitButton();
         FormStatusAssertions.shouldMainErrorHaveText("Algo de errado aconteceu. Tente novamente em breve");
         urlEquals("signup");
+    });
+
+    it("Should prevent multiple submits", () => {
+        mockOk();
+        fillAllFields();
+        SubmitButtonAssertions.doubleClickSubmitButton();
+        cy.get("@request.all").should("have.length", 1);
     });
 });
