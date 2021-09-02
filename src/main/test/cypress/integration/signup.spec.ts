@@ -8,6 +8,7 @@ import {getByTestId} from "../support/selectors/data-type-selector";
 import {isSubmitButtonEnabled} from "../support/assertions/submit-button";
 import {urlEquals} from "../support/assertions/url";
 import {mockEmailInUse, mockUnexpectedError, mockInvalidData, mockOk} from "../support/mocks/sinup-mocks";
+import {testLocalStorageItem} from "../support/assertions/local-storage";
 
 const fillAllFields = () => {
     const password = faker.internet.password();
@@ -105,6 +106,15 @@ describe("Sign up", () => {
         SubmitButtonAssertions.clickSubmitButton();
         FormStatusAssertions.shouldMainErrorHaveText("Algo de errado aconteceu. Tente novamente em breve");
         urlEquals("signup");
+    });
+
+    it("Should present save access token if valid credentials provided", () => {
+        mockOk();
+        fillAllFields();
+        SubmitButtonAssertions.doubleClickSubmitButton();
+        FormStatusAssertions.shouldNotExistMainErrorWrap();
+        urlEquals("");
+        testLocalStorageItem("accessToken");
     });
 
     it("Should prevent multiple submits", () => {
