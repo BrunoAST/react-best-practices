@@ -69,6 +69,7 @@ const SignUp: React.FC<SignUpProps> = ({validation, addAccount, saveAccessToken}
                     <h2>Criar conta</h2>
 
                     <Input
+                        autoFocus
                         type="text"
                         name="name"
                         placeholder="Digite seu nome"
