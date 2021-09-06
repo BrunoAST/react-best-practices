@@ -42,6 +42,13 @@ describe("ValidationBuilder", () => {
         expect(validations).toEqual([new MinLengthValidation(fieldName, minLength)]);
     });
 
+    it("Should return default minLength if none is passed", () => {
+        const {fieldName} = makeSut();
+        const validations = ValidationBuilder.field(fieldName).minLength().build();
+        expect(validations.length).toBe(1);
+        expect(validations).toEqual([new MinLengthValidation(fieldName, 0)]);
+    });
+
     it("Should return CompareFieldsValidation", () => {
         const {fieldName, fieldToCompare} = makeSut();
         const validations = ValidationBuilder.field(fieldName).sameAs(fieldToCompare).build();
