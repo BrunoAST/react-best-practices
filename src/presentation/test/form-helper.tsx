@@ -30,7 +30,11 @@ export const testButtonIsDisabled = (sut: RenderResult, fieldName: string, isDis
     expect(button.disabled).toBe(isDisabled);
 }
 
-export const populateField = (sut: RenderResult, fieldName: string, value: string = faker.random.word()): void => {
+export const populateField = (
+    sut: RenderResult,
+    fieldName: string,
+    value: string = faker.datatype.string(10)
+): void => {
     const input = sut.getByTestId(fieldName);
     fireEvent.input(input, {target: {value: value}});
 }
