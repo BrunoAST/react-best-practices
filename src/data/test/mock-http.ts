@@ -22,10 +22,14 @@ export class HttpPostClientSpy<BodyType, ResponseType> implements HttpPostClient
     }
 }
 
-export class HttpGetClientSpy implements HttpGetClient {
+export class HttpGetClientSpy<ResponseType> implements HttpGetClient<ResponseType> {
     url: string;
+    response: HttpResponse<ResponseType> = {
+        statusCode: HttpStatusCode.ok
+    };
 
-    async get(params: HttpGetParams): Promise<void> {
+    async get(params: HttpGetParams): Promise<HttpResponse<ResponseType>> {
         this.url = params.url;
+        return Promise.resolve(this.response);
     }
 }
