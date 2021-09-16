@@ -1,22 +1,22 @@
-import axios, {AxiosResponse} from "axios";
+import axios, { AxiosResponse } from "axios";
 import { HttpGetClient, HttpGetParams } from "data/protocols/http/http-get-client";
-import {HttpPostClient, HttpPostParams} from "../../../data/protocols/http/http-post-client";
-import {HttpResponse} from "../../../data/protocols/http/http-response";
+import { HttpPostClient, HttpPostParams } from "../../../data/protocols/http/http-post-client";
+import { HttpResponse } from "../../../data/protocols/http/http-response";
 
 export class AxiosHttpClient implements HttpPostClient<any, any>, HttpGetClient<any> {
     async post(params: HttpPostParams<unknown>): Promise<HttpResponse<any>> {
         let httpResponse: HttpResponse<any>;
         await axios.post(params.url, params.body)
-            .then((response: AxiosResponse) => httpResponse = {statusCode: response.status, body: response.data})
-            .catch((error) => httpResponse = {statusCode: error.response.status, body: error.response.data});
+            .then((response: AxiosResponse) => httpResponse = { statusCode: response.status, body: response.data })
+            .catch((error) => httpResponse = { statusCode: error.response.status, body: error.response.data });
         return httpResponse;
     }
 
     async get(params: HttpGetParams): Promise<HttpResponse<any>> {
-        const axiosResponse = await axios.get(params.url);
-        return {
-            statusCode: axiosResponse.status,
-            body: axiosResponse.data
-        };
+        let httpResponse: HttpResponse<any>;
+        await axios.get(params.url)
+            .then((response: AxiosResponse) => httpResponse = { statusCode: response.status, body: response.data })
+            .catch((error) => httpResponse = { statusCode: error.response.status, body: error.response.data });
+        return httpResponse;
     }
 }
