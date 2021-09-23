@@ -9,7 +9,7 @@ const Icon: React.FC<IconProps> = ({ iconName, className }: IconProps) => {
 
   return (
     <div className={`${Styles.iconWrapper} ${iconColor(iconName)} ${className}`}>
-      <img src={iconName} alt="Thumb down" />
+      <img src={iconName} alt="Thumb icon" />
     </div>
   );
 }
