@@ -1,21 +1,13 @@
 import React from "react";
-import Logo from "../../components/Logo/Logo";
 import Footer from "../../components/Footer/Footer";
+import Header from "../../components/Header/Header";
 import Styles from "./survey-list.module.scss";
 import { thumbDownIcon } from "../../../theme/assets/icons";
 
 const SurveyList: React.FC = () => {
 	return (
 		<div className={Styles.surveyListWrapper}>
-			<header className={Styles.headerWrapper}>
-				<div className={Styles.headerWrapper__content}>
-					<Logo />
-					<div className={Styles.logoutWrapper}>
-						<span>Rodrigo</span>
-						<a href="#">Sair</a>
-					</div>
-				</div>
-			</header>
+			<Header />
 			<div className={Styles.contentWrapper}>
 				<h2 className={Styles.contentWrapper__title}>Enquetes</h2>
 				<ul className={Styles.contentWrapper__resultsList}>
