@@ -52,22 +52,10 @@
           background-position: 0 0, 54 0;
           background-size: 50px 100%, 100% 100%;
 
-          &__iconWrap {
+          &__iconWrapper {
             position: absolute;
             top: -10px;
             right: -10px;
-            padding: 10px;
-            border-radius: 100%;
-            display: flex;
-            box-shadow: 0 1px 3px -1px $black;
-
-            &.red {
-              background-color: $invalid;
-            }
-
-            &.green {
-              background-color: $valid;
-            }
           }
 
           time {

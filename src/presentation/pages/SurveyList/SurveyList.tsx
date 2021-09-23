@@ -1,8 +1,9 @@
 import React from "react";
 import Footer from "../../components/Footer/Footer";
 import Header from "../../components/Header/Header";
+import Icon from "../../components/Icon/Icon";
+import { IconName } from "../../components/Icon/types/icon-props";
 import Styles from "./survey-list.module.scss";
-import { thumbDownIcon } from "../../../theme/assets/icons";
 
 const SurveyList: React.FC = () => {
 	return (
@@ -13,9 +14,7 @@ const SurveyList: React.FC = () => {
 				<ul className={Styles.contentWrapper__resultsList}>
 					<li>
 						<div className={Styles.surveyContent}>
-							<div className={`${Styles.surveyContent__iconWrap} ${Styles.red}`}>
-								<img src={thumbDownIcon} alt="Thumb down" />
-							</div>
+							<Icon iconName={IconName.thumbUp} className={Styles.surveyContent__iconWrapper} />
 							<time>
 								<span className={Styles.day}>20</span>
 								<span className={Styles.month}>03</span>
