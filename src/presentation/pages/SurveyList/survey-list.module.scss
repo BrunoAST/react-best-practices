@@ -111,3 +111,17 @@
     }
   }
 }
+
+@media only screen and (max-width: 600px) {
+  .surveyListWrapper {
+    .contentWrapper {
+      &__resultsList {
+        flex-direction: column;
+
+        li {
+          flex-basis: 100%;
+        }
+      }
+    }
+  }
+}
