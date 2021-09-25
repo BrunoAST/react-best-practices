@@ -3,7 +3,7 @@ import Styles from "./icon.module.scss";
 import { IconName, IconProps } from './types/icon-props';
 
 const Icon: React.FC<IconProps> = ({ iconName, className }: IconProps) => {
-  const iconColor = (iconName: IconName): string => {
+  const iconColor = (iconName: string): string => {
     return iconName === IconName.thumbDown ? Styles.red : Styles.green;
   }
 
