@@ -7,7 +7,7 @@ import Input from "../../components/Input/Input";
 import FormStatus from "../../components/FormStatus/FormStatus";
 import Footer from "../../components/Footer/Footer";
 import { SignUpProps } from "./types/signup-props";
-import { ROUTES } from "../../components/Router/constants/routes.const";
+import { ROUTES } from "../../../main/Router/constants/routes.const";
 import SubmitButton from "../../components/SubmitButton/SubmitButton";
 
 const SignUp: React.FC<SignUpProps> = ({ validation, addAccount, updateCurrentAccount }: SignUpProps) => {
