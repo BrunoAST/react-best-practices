@@ -1,14 +1,14 @@
 /// <reference types="cypress" />
 
 import faker from "faker";
-import {isWrapInvalid} from "../support/assertions/input";
+import { isWrapInvalid } from "../support/assertions/input";
 import * as FormStatusAssertions from "../support/assertions/form-status";
 import * as SubmitButtonAssertions from "../support/assertions/submit-button";
-import {getByTestId} from "../support/selectors/data-type-selector";
-import {isSubmitButtonEnabled} from "../support/assertions/submit-button";
-import {urlEquals} from "../support/assertions/url";
-import {mockEmailInUse, mockUnexpectedError, mockInvalidData, mockOk} from "../support/mocks/sinup-mocks";
-import {testLocalStorageItem} from "../support/assertions/local-storage";
+import { getByTestId } from "../support/selectors/data-type-selector";
+import { isSubmitButtonEnabled } from "../support/assertions/submit-button";
+import { urlEquals } from "../support/assertions/url";
+import { mockEmailInUse, mockUnexpectedError, mockInvalidData, mockOk } from "../support/mocks/sinup-mocks";
+import { testLocalStorageItem } from "../support/assertions/local-storage";
 
 const fillAllFields = () => {
     const password = faker.internet.password();
@@ -114,7 +114,7 @@ describe("Sign up", () => {
         SubmitButtonAssertions.doubleClickSubmitButton();
         FormStatusAssertions.shouldNotExistMainErrorWrap();
         urlEquals("");
-        testLocalStorageItem("accessToken");
+        testLocalStorageItem("account");
     });
 
     it("Should prevent multiple submits", () => {

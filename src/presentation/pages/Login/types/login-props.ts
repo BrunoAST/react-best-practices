@@ -1,9 +1,9 @@
-import {Validation} from "../../../protocols/validation";
-import {Authentication} from "../../../../domain/usecases/authentication";
-import {SaveAccessToken} from "../../../../domain/usecases/save-access-token";
+import { Validation } from "../../../protocols/validation";
+import { Authentication } from "../../../../domain/usecases/authentication";
+import { UpdateCurrentAccount } from "../../../../domain/usecases/update-current-account";
 
 export type LoginProps = {
     validation: Validation;
     authentication: Authentication;
-    saveAccessToken: SaveAccessToken
+    updateCurrentAccount: UpdateCurrentAccount
 }

@@ -39,5 +39,5 @@ export const mockUnexpectedError = (url: RegExp, method: string): void => {
 }
 
 export const mockOk = (url: RegExp, method: string, response: any): void => {
-    cy.route({method, url, status: 200, response}).as("request");
+    cy.route({ method, url, status: 200, response }).as("request");
 }

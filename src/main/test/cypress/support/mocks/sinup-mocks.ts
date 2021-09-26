@@ -4,7 +4,8 @@ import faker from "faker";
 export const mockEmailInUse = (): void => Helper.mockEmailInUse(/signup/);
 export const mockUnexpectedError = (): void => Helper.mockUnexpectedError(/signup/, "POST");
 export const mockOk = (): void => Helper.mockOk(/signup/, "POST", {
-    accessToken: faker.datatype.uuid()
+    accessToken: faker.datatype.uuid(),
+    name: faker.name.firstName(),
 });
 export const mockInvalidData = (): void => Helper.mockOk(/signup/, "POST", {
     invalid: faker.datatype.uuid()

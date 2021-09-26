@@ -12,7 +12,7 @@
     "test:staged": "npm test -- --findRelatedTests",
     "test:ci": "npm test -- --coverage",
     "test:cypress": "cypress open",
-    "teste:cypress-headless": "cypress run"
+    "test:cypress-headless": "cypress run"
   },
   "devDependencies": {
     "@cypress/webpack-preprocessor": "^5.9.1",

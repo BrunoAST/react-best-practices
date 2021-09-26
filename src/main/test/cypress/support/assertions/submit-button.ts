@@ -1,6 +1,6 @@
 /// <reference types="cypress" />
 
-import {getByTestId} from "../selectors/data-type-selector";
+import { getByTestId } from "../selectors/data-type-selector";
 
 export const isSubmitButtonEnabled = (enabled = true): void => {
     getByTestId("submit-button").should(enabled ? "be.enabled" : "be.disabled");

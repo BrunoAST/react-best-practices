@@ -1,15 +1,15 @@
-import React, {useEffect, useState} from "react";
-import {Link, useHistory} from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { Link, useHistory } from "react-router-dom";
 import Styles from "../../../theme/styles/form.scss";
 import LoginHeader from "../../components/LoginHeader/LoginHeader";
 import Footer from "../../components/Footer/Footer";
 import Input from "../../components/Input/Input";
 import FormStatus from "../../components/FormStatus/FormStatus";
 import Context from "../../context/form/form-context";
-import {LoginProps} from "./types/login-props";
+import { LoginProps } from "./types/login-props";
 import SubmitButton from "../../components/SubmitButton/SubmitButton";
 
-const Login: React.FC<LoginProps> = ({validation, authentication, saveAccessToken}: LoginProps) => {
+const Login: React.FC<LoginProps> = ({ validation, authentication, updateCurrentAccount }: LoginProps) => {
     const history = useHistory();
     const [state, setState] = useState({
         isLoading: false,
@@ -22,8 +22,8 @@ const Login: React.FC<LoginProps> = ({validation, authentication, saveAccessToke
     });
 
     useEffect(() => {
-        const {email, password} = state;
-        const formData = {email, password};
+        const { email, password } = state;
+        const formData =  {email, password };
         const emailError = validation.validate("email", formData);
         const passwordError = validation.validate("password", formData);
         setState({
@@ -39,8 +39,8 @@ const Login: React.FC<LoginProps> = ({validation, authentication, saveAccessToke
         if (state.isLoading || state.isFormInvalid) return;
         setState({...state, isLoading: true});
         try {
-            const {accessToken} = await authentication.auth({email: state.email, password: state.password});
-            await saveAccessToken.save(accessToken);
+            const account = await authentication.auth({ email: state.email, password: state.password });
+            await updateCurrentAccount.save(account);
             history.replace("/");
         } catch (error) {
             setState({...state, isLoading: false, mainError: error.message});
@@ -50,7 +50,7 @@ const Login: React.FC<LoginProps> = ({validation, authentication, saveAccessToke
     return (
         <div className={Styles.formWrapper}>
             <LoginHeader/>
-            <Context.Provider value={{state, setState}}>
+            <Context.Provider value={{ state, setState }}>
                 <form data-testid="form" className={Styles.formWrapper__form} onSubmit={handleSubmit}>
                     <h2>Login</h2>
 

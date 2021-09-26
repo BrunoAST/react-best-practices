@@ -1,6 +1,6 @@
 /// <reference types="cypress" />
 
-import {getByTestId} from "../selectors/data-type-selector";
+import { getByTestId } from "../selectors/data-type-selector";
 
 export const shouldNotHaveDescendants = (): void => {
     getByTestId("error-wrap").should("not.have.descendants");
