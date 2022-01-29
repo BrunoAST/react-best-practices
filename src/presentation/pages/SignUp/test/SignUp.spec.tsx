@@ -5,7 +5,7 @@ import { fireEvent, render, screen } from "@testing-library/react";
 import { Router } from "react-router-dom";
 import { ROUTES } from "../../../../main/Router/constants/routes.const";
 import SignUp from "../SignUp";
-import { populateField, testButtonIsDisabled, testChildCount, testElementExists, testElementText, testStatusForField } from "../../../test/form-helper";
+import { populateField, testStatusForField } from "../../../test/form-helper";
 import { ValidationStub } from "../../../test/mock-validation";
 import { simulateValidSignUpSubmit } from "./signup-test-helper";
 import { AddAccountSpy } from "../../../test/mock-add-account";
@@ -45,14 +45,14 @@ const makeSut = (params?: SutParams): SutTypes => {
 
 describe("SignUp Component", () => {
   it("Should not render spinner and error on start", () => {
-     makeSut();
-    testChildCount("error-wrap", 0);
+    makeSut();
+    expect(screen.getByTestId("error-wrap").children).toHaveLength(0);
   });
 
   it("Should start with submit button disabled", () => {
     const validationError = faker.random.words();
     makeSut({ validationError });
-    testButtonIsDisabled("submit-button", true);
+    expect(screen.getByTestId("submit-button")).toBeDisabled();
   });
 
   it("Should start with the initial status label for inputs", () => {
@@ -118,13 +118,13 @@ describe("SignUp Component", () => {
     populateField("email", faker.internet.email());
     populateField("password", faker.internet.password());
     populateField("passwordConfirmation", faker.internet.password());
-    testButtonIsDisabled("submit-button", false);
+    expect(screen.getByTestId("submit-button")).toBeEnabled();
   });
 
   it("Should show spinner on submit", async () => {
     makeSut();
     await simulateValidSignUpSubmit();
-    testElementExists("spinner");
+    expect(screen.queryByTestId("spinner")).toBeInTheDocument();
   });
 
   it("Should call AddAccount with correct values", async () => {
@@ -160,8 +160,8 @@ describe("SignUp Component", () => {
     const error = new InvalidCredentialsError();
     jest.spyOn(addAccountSpy, "add").mockRejectedValueOnce(error);
     await simulateValidSignUpSubmit();
-    testElementText("main-error", error.message);
-    testChildCount("error-wrap", 1);
+    expect(screen.getByTestId("main-error")).toHaveTextContent(error.message);
+    expect(screen.getByTestId("error-wrap").children).toHaveLength(1);
   });
 
   it("Should call UpdateCurrentAccount on success", async () => {

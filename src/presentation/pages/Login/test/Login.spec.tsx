@@ -9,7 +9,7 @@ import { AuthenticationSpy } from "../../../test/mock-authentication";
 import { InvalidCredentialsError } from "../../../../domain/errors/invalid-credentials-error";
 import { ROUTES } from "../../../../main/Router/constants/routes.const";
 import { simulateLoginValidSubmit } from "./login-test-helper";
-import { populateField, testButtonIsDisabled, testChildCount, testElementExists, testElementText, testStatusForField } from "../../../test/form-helper";
+import { populateField, testStatusForField } from "../../../test/form-helper";
 import ApiContext from "../../../context/api/api-context";
 import { AccountModel } from "../../../../domain/models/account-model";
 
@@ -45,13 +45,13 @@ const makeSut = (params?: SutParams): SutTypes => {
 describe("Login Component", () => {
   it("Should not render spinner and error on start", () => {
     makeSut();
-    testChildCount("error-wrap", 0);
+    expect(screen.getByTestId("error-wrap").children).toHaveLength(0);
   });
 
   it("Should start with submit button disabled", () => {
     const validationError = faker.random.words();
-     makeSut({ validationError });
-    testButtonIsDisabled("submit-button", true);
+    makeSut({ validationError });
+    expect(screen.getByTestId("submit-button")).toBeDisabled();
   });
 
   it("Should start with the initial status label for email input", () => {
@@ -92,16 +92,16 @@ describe("Login Component", () => {
   });
 
   it("Should enable submit button if form is valid", () => {
-     makeSut();
+    makeSut();
     populateField("email", faker.internet.email());
     populateField("password", faker.internet.password());
-    testButtonIsDisabled("submit-button", false);
+    expect(screen.getByTestId("submit-button")).toBeEnabled();
   });
 
   it("Should show spinner on submit", async () => {
     makeSut();
     await simulateLoginValidSubmit();
-    testElementExists("spinner")
+    expect(screen.queryByTestId("spinner")).toBeInTheDocument();
   });
 
   it("Should call Authentication with correct values", async () => {
@@ -131,7 +131,7 @@ describe("Login Component", () => {
     const error = new InvalidCredentialsError();
     jest.spyOn(authenticationSpy, "auth").mockReturnValueOnce(Promise.reject(error));
     await simulateLoginValidSubmit();
-    testElementText("main-error", error.message);
+    expect(screen.getByTestId("main-error")).toHaveTextContent(error.message);
   });
 
   it("Should hide spinner if Authentication fails", async () => {
@@ -139,7 +139,7 @@ describe("Login Component", () => {
     const error = new InvalidCredentialsError();
     jest.spyOn(authenticationSpy, "auth").mockRejectedValueOnce(error);
     await simulateLoginValidSubmit();
-    testChildCount("error-wrap", 1);
+    expect(screen.getByTestId("error-wrap").children).toHaveLength(1);
   });
 
   it("Should call UpdateCurrentAccount on success", async () => {
