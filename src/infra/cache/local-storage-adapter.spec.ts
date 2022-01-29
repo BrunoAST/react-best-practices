@@ -1,6 +1,5 @@
 import faker from "faker";
 import "jest-localstorage-mock";
-import { cleanup } from "@testing-library/react";
 import { LocalStorageAdapter } from "./local-storage-adapter";
 import { AccountModel } from "../../domain/models/account-model";
 
@@ -18,8 +17,6 @@ const makeSut = (): SutTypes => {
 beforeEach(() => {
   localStorage.clear();
 });
-
-afterEach(cleanup);
 
 describe("LocalStorageAdapter", () => {
   test("Should call LocalStorage.setItem with correct values", () => {
