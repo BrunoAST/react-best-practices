@@ -1,6 +1,7 @@
 import React from "react";
 import Footer from "../../components/Footer/Footer";
 import Header from "../../components/Header/Header";
+import SurveyItemEmpty from "./components/SurveyItemEmpty/SurveyItemEmpty";
 import Styles from "./survey-list.module.scss";
 
 const SurveyList: React.FC = () => {
@@ -9,8 +10,8 @@ const SurveyList: React.FC = () => {
 			<Header />
 			<div className={Styles.contentWrapper}>
 				<h2 className={Styles.contentWrapper__title}>Enquetes</h2>
-				<ul className={Styles.contentWrapper__resultsList}>
-					
+				<ul className={Styles.contentWrapper__resultsList} data-testid="survey-list">
+					<SurveyItemEmpty />
 				</ul>
 			</div>
 			<Footer />
