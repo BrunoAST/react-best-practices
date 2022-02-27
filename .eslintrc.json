@@ -1,25 +1,28 @@
 {
-    "settings": {
-        "react": {
-            "version": "detect"
-        }
-    },
-    "extends": [
-        "airbnb-typescript",
-        "plugin:react/recommended",
-        "plugin:cypress/recommended"
-    ],
-    "env": {
-        "cypress/globals": true
-    },
-    "plugins": ["react", "cypress"],
-    "parserOptions": {
-        "project": "./tsconfig-eslint.json"
-    },
-    "rules": {
-        "@typescript-eslint/consistent-type-definitions": "off",
-        "@typescript-eslint/strict-boolean-expressions": "off",
-        "react/jsx-use-react": "error",
-        "react/jsx-use-vars": "error"
+  "settings": {
+    "react": {
+      "version": "detect"
     }
+  },
+  "extends": [
+    "airbnb-typescript",
+    "plugin:react/recommended",
+    "plugin:cypress/recommended"
+  ],
+  "env": {
+    "cypress/globals": true
+  },
+  "plugins": ["react", "cypress"],
+  "parserOptions": {
+    "project": "./tsconfig-eslint.json"
+  },
+  "rules": {
+    "@typescript-eslint/consistent-type-definitions": "off",
+    "@typescript-eslint/strict-boolean-expressions": "off",
+    "@typescript-eslint/no-floating-promises": "off",
+    "@typescript-eslint/comma-spacing": "off",
+    "@typescript-eslint/return-await": "off",
+    "react/jsx-use-react": "error",
+    "react/jsx-use-vars": "error"
+  }
 }
