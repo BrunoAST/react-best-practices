@@ -1,19 +1,26 @@
 import React from "react";
 import Styles from "./survey-item.module.scss";
-import Icon from "presentation/components/Icon/Icon";
-import { IconName } from "presentation/components/Icon/types/icon-props";
+import { SurveyItemProps } from "./types/survey-item-props";
+import Icon from "../../../../components/Icon/Icon";
+import { IconName } from "../../../../components/Icon/types/icon-props";
 
-const SurveyItem: React.FC = () => {
+const SurveyItem: React.FC<SurveyItemProps> = ({ survey }: SurveyItemProps) => {
   return (
     <li>
       <div className={Styles.surveyContent}>
         <Icon iconName={IconName.thumbUp} className={Styles.surveyContent__iconWrapper} />
         <time>
-          <span className={Styles.day}>20</span>
-          <span className={Styles.month}>03</span>
-          <span className={Styles.year}>2021</span>
+          <span data-testid="day" className={Styles.day}>
+            {survey.date.getDate()}
+          </span>
+          <span data-testid="month" className={Styles.month}>
+            {survey.date.toLocaleDateString("pt-BR", { month: "short" }).replace(".", "")}
+          </span>
+          <span data-testid="year" className={Styles.year}>
+            {survey.date.getFullYear()}
+          </span>
         </time>
-        <p>Qual é seu framework web favorito?</p>
+        <p data-testid="question">{survey.question}</p>
       </div>
       <footer>
         Ver Resultado

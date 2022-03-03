@@ -1,6 +1,6 @@
-import React from 'react';
+import React from "react";
 import Styles from "./icon.module.scss";
-import { IconName, IconProps } from './types/icon-props';
+import { IconName, IconProps } from "./types/icon-props";
 
 const Icon: React.FC<IconProps> = ({ iconName, className }: IconProps) => {
   const iconColor = (iconName: string): string => {
@@ -9,7 +9,7 @@ const Icon: React.FC<IconProps> = ({ iconName, className }: IconProps) => {
 
   return (
     <div className={`${Styles.iconWrapper} ${iconColor(iconName)} ${className}`}>
-      <img src={iconName} alt="Thumb icon" />
+      <img data-testid="icon" src={iconName} alt="Thumb icon" />
     </div>
   );
 }
