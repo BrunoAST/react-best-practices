@@ -5,13 +5,15 @@ import Icon from "../../../../components/Icon/Icon";
 import { IconName } from "../../../../components/Icon/types/icon-props";
 
 const SurveyItem: React.FC<SurveyItemProps> = ({ survey }: SurveyItemProps) => {
+  const iconName = survey.didAnswer ? IconName.thumbUp : IconName.thumbDown;
+
   return (
     <li>
       <div className={Styles.surveyContent}>
-        <Icon iconName={IconName.thumbUp} className={Styles.surveyContent__iconWrapper} />
+        <Icon iconName={iconName} className={Styles.surveyContent__iconWrapper} />
         <time>
           <span data-testid="day" className={Styles.day}>
-            {survey.date.getDate()}
+            {survey.date.getDate().toString().padStart(2, "0")}
           </span>
           <span data-testid="month" className={Styles.month}>
             {survey.date.toLocaleDateString("pt-BR", { month: "short" }).replace(".", "")}
