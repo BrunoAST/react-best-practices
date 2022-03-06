@@ -9,11 +9,14 @@ import SurveyItem from "./components/SurveyItem/SurveyItem";
 
 const SurveyList: React.FC<SurveyListProps> = ({ loadSurveyList }: SurveyListProps) => {
 	const [state, setState] = useState({
-		surveys: [] as SurveyModel[]
+		surveys: [] as SurveyModel[],
+		error: ""
 	});
 
 	useEffect(() => {
-		loadSurveyList.loadAll().then((surveys: SurveyModel[]) => setState({ surveys }));
+		loadSurveyList.loadAll()
+			.then((surveys: SurveyModel[]) => setState({ ...state, surveys }))
+			.catch(error => setState({ ...state, error: error.message }));
 	}, []);
 
 	return (
@@ -21,13 +24,21 @@ const SurveyList: React.FC<SurveyListProps> = ({ loadSurveyList }: SurveyListPro
 			<Header />
 			<div className={Styles.contentWrapper}>
 				<h2 className={Styles.contentWrapper__title}>Enquetes</h2>
-				<ul className={Styles.contentWrapper__resultsList} data-testid="survey-list">
-					{
-						state.surveys.length
-							? state.surveys.map((survey: SurveyModel) => <SurveyItem key={survey.id} survey={survey} />)
-							: <SurveyItemEmpty />
-					}
-				</ul>
+				{
+					state.error
+						? <div>
+							<span data-testid="error">{state.error}</span>
+							<button>Recarregar</button>
+						</div>
+						:
+						<ul className={Styles.contentWrapper__resultsList} data-testid="survey-list">
+							{
+								state.surveys.length
+									? state.surveys.map((survey: SurveyModel) => <SurveyItem key={survey.id} survey={survey} />)
+									: <SurveyItemEmpty />
+							}
+						</ul>
+				}
 			</div>
 			<Footer />
 		</div>
