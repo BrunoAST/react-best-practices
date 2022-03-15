@@ -11,14 +11,15 @@ import SurveyError from "./components/SurveyError/SurveyError";
 const SurveyList: React.FC<SurveyListProps> = ({ loadSurveyList }: SurveyListProps) => {
 	const [state, setState] = useState({
 		surveys: [] as SurveyModel[],
-		error: ""
+		error: "",
+		reload: false
 	});
 
 	useEffect(() => {
 		loadSurveyList.loadAll()
 			.then((surveys: SurveyModel[]) => setState({ ...state, surveys }))
 			.catch(error => setState({ ...state, error: error.message }));
-	}, []);
+	}, [state.reload]);
 
 	return (
 		<div className={Styles.surveyListWrapper}>
