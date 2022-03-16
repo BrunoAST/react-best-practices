@@ -1,25 +1,26 @@
 @import "colors";
 
 button {
-    background-color: $primary;
-    color: $white;
-    border-radius: 8px;
-    font-size: 16px;
-    border: none;
-    line-height: 50px;
-    cursor: pointer;
+  background-color: $primary;
+  color: $white;
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  border: none;
+  line-height: 50px;
+  cursor: pointer;
+  padding: 0 1rem;
+
+  &:hover {
+    opacity: 0.9;
+  }
+
+  &:disabled {
+    cursor: default;
+    background-color: $disabledBackground;
+    color: $disabledColor;
 
     &:hover {
-        opacity: .9;
+      opacity: 1;
     }
-
-    &:disabled {
-        cursor: default;
-        background-color: $disabledBackground;
-        color: $disabledColor;
-
-        &:hover {
-            opacity: 1;
-        }
-    }
+  }
 }

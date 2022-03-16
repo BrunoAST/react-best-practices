@@ -1,5 +1,6 @@
 import React, { useContext } from "react";
 import SurveyListContext from "../../context/survey-list-context";
+import Styles from "./survey-error.module.scss";
 
 const SurveyError: React.FC = () => {
   const { state, setState } = useContext(SurveyListContext);
@@ -9,7 +10,7 @@ const SurveyError: React.FC = () => {
   };
 
   return (
-    <div>
+    <div className={Styles.errorWrap}>
       <span data-testid="error">{state.error}</span>
       <button data-testid="reload" onClick={reload}>Recarregar</button>
     </div>
