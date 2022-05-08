@@ -3,7 +3,7 @@ import faker from "faker";
 
 export class GetStorageSpy implements GetStorage {
   public key: string;
-  public value = faker.random.objectElement();
+  public value: any = faker.random.objectElement();
 
   get(key: string): any {
     this.key = key;
