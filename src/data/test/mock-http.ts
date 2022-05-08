@@ -14,13 +14,13 @@ export const mockGetRequest = (): HttpGetParams => ({
 });
 
 export class HttpPostClientSpy<BodyType, ResponseType> implements HttpPostClient<BodyType, ResponseType> {
-  url?: string;
-  body?: BodyType;
-  response: HttpResponse<ResponseType> = {
+  public url?: string;
+  public body?: BodyType;
+  public response: HttpResponse<ResponseType> = {
     statusCode: HttpStatusCode.ok
   };
 
-  post(params: HttpPostParams<BodyType>): Promise<HttpResponse<ResponseType>> {
+  public post(params: HttpPostParams<BodyType>): Promise<HttpResponse<ResponseType>> {
     this.url = params.url;
     this.body = params.body;
     return Promise.resolve(this.response);
@@ -28,13 +28,15 @@ export class HttpPostClientSpy<BodyType, ResponseType> implements HttpPostClient
 }
 
 export class HttpGetClientSpy<ResponseType> implements HttpGetClient<ResponseType> {
-  url: string;
-  response: HttpResponse<ResponseType> = {
+  public url: string;
+  public response: HttpResponse<ResponseType> = {
     statusCode: HttpStatusCode.ok
   };
+  public headers?: any;
 
-  async get(params: HttpGetParams): Promise<HttpResponse<ResponseType>> {
+  public async get(params: HttpGetParams): Promise<HttpResponse<ResponseType>> {
     this.url = params.url;
+    this.headers = params.headers;
     return Promise.resolve(this.response);
   }
 }
