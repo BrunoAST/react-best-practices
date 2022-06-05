@@ -8,17 +8,17 @@ import SignUp from "../SignUp";
 import { populateField, testStatusForField } from "../../../test/form-helper";
 import { ValidationStub } from "../../../test/mock-validation";
 import { simulateValidSignUpSubmit } from "./signup-test-helper";
-import { AddAccountSpy } from "../../../test/mock-add-account";
+import { AddAccountSpy } from "../../../../domain/test/mock-add-account";
 import { InvalidCredentialsError } from "../../../../domain/errors/invalid-credentials-error";
 import { simulateLoginValidSubmit } from "../../Login/test/login-test-helper";
 import ApiContext from "../../../context/api/api-context";
-import { AccountModel } from "../../../../domain/models/account-model";
+import { AddAccount } from "../../../../domain/usecases/add-account";
 
 const history = createMemoryHistory({ initialEntries: [ROUTES.SIGNUP] });
 
 type SutTypes = {
   addAccountSpy: AddAccountSpy;
-  setCurrentAccountMock: (accountModel: AccountModel) => void;
+  setCurrentAccountMock: (accountModel: AddAccount.Model) => void;
 }
 
 type SutParams = {

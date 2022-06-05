@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import Styles from "./survey-list-options.module.scss";
-import { SurveyModel } from "domain/models/survey-model";
+import { LoadSurveyList } from "domain/usecases/load-survey-list";
 import SurveyItem from "../SurveyItem/SurveyItem";
 import SurveyItemEmpty from "../SurveyItemEmpty/SurveyItemEmpty";
 import SurveyListContext from "../../context/survey-list-context";
@@ -12,7 +12,7 @@ const SurveyListOptions: React.FC = () => {
     <ul className={Styles.contentWrapper__resultsList} data-testid="survey-list">
       {
         state.surveys.length
-          ? state.surveys.map((survey: SurveyModel) => <SurveyItem key={survey.id} survey={survey} />)
+          ? state.surveys.map((survey: LoadSurveyList.Model) => <SurveyItem key={survey.id} survey={survey} />)
           : <SurveyItemEmpty />
       }
     </ul>

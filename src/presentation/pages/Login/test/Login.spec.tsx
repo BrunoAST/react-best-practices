@@ -5,19 +5,19 @@ import { Router } from "react-router-dom";
 import { createMemoryHistory } from "history";
 import Login from "../Login";
 import { ValidationStub } from "../../../test/mock-validation";
-import { AuthenticationSpy } from "../../../test/mock-authentication";
 import { InvalidCredentialsError } from "../../../../domain/errors/invalid-credentials-error";
 import { ROUTES } from "../../../../main/Router/constants/routes.const";
 import { simulateLoginValidSubmit } from "./login-test-helper";
 import { populateField, testStatusForField } from "../../../test/form-helper";
 import ApiContext from "../../../context/api/api-context";
-import { AccountModel } from "../../../../domain/models/account-model";
+import { Authentication } from "../../../../domain/usecases/authentication";
+import { AuthenticationSpy } from "../../../../domain/test/mock-authentication";
 
 const history = createMemoryHistory({ initialEntries: [ROUTES.LOGIN] });
 
 type SutTypes = {
   authenticationSpy: AuthenticationSpy;
-  setCurrentAccountMock: (accountModel: AccountModel) => void;
+  setCurrentAccountMock: (accountModel: Authentication.Model) => void;
 }
 
 type SutParams = {

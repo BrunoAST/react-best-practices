@@ -22,6 +22,9 @@
     "@typescript-eslint/no-floating-promises": "off",
     "@typescript-eslint/comma-spacing": "off",
     "@typescript-eslint/return-await": "off",
+    "@typescript-eslint/no-namespace": "off",
+    "no-declare": "off",
+    "import/export": "off",
     "react/jsx-use-react": "error",
     "react/jsx-use-vars": "error"
   }

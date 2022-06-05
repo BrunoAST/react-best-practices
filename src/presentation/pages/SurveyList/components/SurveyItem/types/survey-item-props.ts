@@ -1,5 +1,5 @@
-import { SurveyModel } from "../../../../../../domain/models/survey-model";
+import { LoadSurveyList } from "../../../../../../domain/usecases/load-survey-list";
 
 export type SurveyItemProps = {
-  survey: SurveyModel;
+  survey: LoadSurveyList.Model;
 };

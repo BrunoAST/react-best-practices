@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { SurveyModel } from "domain/models/survey-model";
+import { LoadSurveyList } from "domain/usecases/load-survey-list";
 import Footer from "../../components/Footer/Footer";
 import Header from "../../components/Header/Header";
 import Styles from "./survey-list.module.scss";
@@ -10,14 +10,14 @@ import SurveyError from "./components/SurveyError/SurveyError";
 
 const SurveyList: React.FC<SurveyListProps> = ({ loadSurveyList }: SurveyListProps) => {
 	const [state, setState] = useState({
-		surveys: [] as SurveyModel[],
+		surveys: [] as LoadSurveyList.Model[],
 		error: "",
 		reload: false
 	});
 
 	useEffect(() => {
 		loadSurveyList.loadAll()
-			.then((surveys: SurveyModel[]) => setState({ ...state, surveys }))
+			.then((surveys: LoadSurveyList.Model[]) => setState({ ...state, surveys }))
 			.catch(error => setState({ ...state, error: error.message }));
 	}, [state.reload]);
 
