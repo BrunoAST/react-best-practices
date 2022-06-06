@@ -5,7 +5,7 @@ import { HttpResponse } from "data/protocols/http/http-response";
 /**
  * This class is a decorator for HttpGetClient interface.
  * It will add a token to the request before calling the API.
- * That way, the client will be able to access the resource and the logic to apply the token
+ * That way, the client will be able to access the resource, and the logic to apply the token
  * will be self contained.
  */
 export class AuthorizeHttpGetClientDecorator implements HttpGetClient<any> {
