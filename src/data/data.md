@@ -1,6 +1,6 @@
 ##Objetivo dessa camada
-A ideia dessa camada, é possuir as implementações do
-domínio.
+A ideia dessa camada, é possuir as implementações do domínio.
+Ela também mapeia os dados retornados do servidor para atender as necessidades do client, se necessário.
 ---
 ###Sufixos utilizados
 - Remote: representam implementações que necessitam de 
